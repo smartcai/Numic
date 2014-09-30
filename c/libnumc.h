@@ -3,11 +3,11 @@
 
 #include <stddef.h>
 
-typedef struct vector
+typedef struct mat
 {
 	void *elt;
 	size_t type;
-	const unsigned *dim;
-} vector;
+	unsigned dim;
+} mat;
 
 #endif  /* _LIB_NUM_C_H_ */
