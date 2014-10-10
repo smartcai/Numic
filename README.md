@@ -1,19 +1,21 @@
-libnumc
-=======
+Numic 
+======
 
-A Numerical-Linear-Algebra package written in C.
+Numic is short for **NU**merical **M**atrix **I**n **C**.
 
-./c
+The design philosophy is to build up a clean but not huge matrix computations
+package, so that any project in the C language can incorporate it as part.
+
+./src
 ---
 
-The major code.
+- libnumic.h - The interface.
+- libnumic.c - The major C code.
+- example - Some test code.
+- prototype - Experimental ideas in Octave.
+
 
 ./doc
 -----
 
 The document.
-
-./prototype
------------
-
-The prototypes of algorithms in Octave.
