@@ -1,7 +1,7 @@
 Numic 
 ======
 
-Numic is short for *NU*merical *M*atrix *I*n *C*.
+Numic is short for NUmerical Matrix In C.
 
 The design philosophy is to build up a clean but not huge matrix computations
 package, so that any project in the C language can incorporate it as part.
