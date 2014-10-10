@@ -1,15 +1,6 @@
-#ifndef _LIB_NUM_C_H_
-#define _LIB_NUM_C_H_
+#ifndef __NUM_LIBNUMIC_H__
+#define __NUM_LIBNUMIC_H__
 
 #include <stddef.h>
 
-typedef struct mat
-{
-	void *elt;
-	size_t type;
-	unsigned dim;
-} mat;
-
-mat zeros(UINT N, ...);
-
-#endif  /* _LIB_NUM_C_H_ */
+#endif  /* __NUM_LIBNUMIC_H__ */
