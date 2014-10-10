@@ -10,4 +10,6 @@ typedef struct mat
 	unsigned dim;
 } mat;
 
+mat zeros(UINT N, ...);
+
 #endif  /* _LIB_NUM_C_H_ */
