@@ -1,6 +1,6 @@
 CC=gcc
 INC=../
-FILES=main.c
+FILES=main.c ../libnumic.c
 CFLAGS=-I$(INC)
 
 .PHONY: all
