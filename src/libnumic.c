@@ -2,40 +2,42 @@
 
 #define PTR_FREE(p) (free(p), p = NULL)
 
-/* Define a matrix as math */
-typedef struct Matrix {
+/**
+ * @matrix: defined as math.
+ */
+typedef struct matrix {
 	int rows;
 	int cols;
 	double *data;
-} Mat;
+} mat;
 
-static Mat* Matrix_New(int rows, int cols);
-static void Matrix_Del(Mat *m);
+static mat* mat_new(int rows, int cols);
+static void mat_del(mat *m);
 
-MObject *Matrix_Object_New(int rows, int cols)
+MObject *matrix_object_new(int rows, int cols)
 {
 	MObject *mobj = (MObject*)malloc(sizeof(MObject));
-	mobj->m = Matrix_New(rows, cols);
+	mobj->m = mat_new(rows, cols);
 	return mobj;
 }
-void Matrix_Object_Del(MObject *mobj)
+void matrix_object_del(MObject *mobj)
 {
 	if (mobj != NULL) {
-		Matrix_Del(mobj->m);
+		mat_del(mobj->m);
 		PTR_FREE(mobj);
 	}
 }
 
-static Mat* Matrix_New(int rows, int cols)
+static mat* mat_new(int rows, int cols)
 {
-	Mat* m = (Mat*)malloc(sizeof(Mat));
+	mat* m = (mat*)malloc(sizeof(mat));
 	m->rows = rows;
 	m->cols = cols;
 	m->data = (double*)malloc(sizeof(double) * rows * cols);
 	return m;
 }
 
-static void Matrix_Del(Mat *m)
+static void mat_del(mat *m)
 {
 	if (m != NULL) {
 		if (m->data != NULL) {

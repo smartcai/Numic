@@ -2,8 +2,8 @@
 
 int main(int argc, char *argv[])
 {
-	MObject *m = Matrix_Object_New(3, 5);
-	Matrix_Object_Del(m);
+	MObject *m = matrix_object_new(3, 5);
+	matrix_object_del(m);
 	return 0;
 }
 
