@@ -23,4 +23,7 @@ struct Matrix_Object {
 MObject *matrix_object_new(int rows, int cols);
 void matrix_object_del(MObject *mobj);
 
+void matrix_object_set(MObject *mobj, int i, int j, double elt);
+double matrix_object_get(MObject *mobj, int i, int j);
+
 #endif  /* __NUM_LIBNUMIC_H__ */
