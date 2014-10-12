@@ -40,6 +40,16 @@ void destroy_matrix(matrix *mp)
 	FREE_SET_NULL(mp);
 }
 
+void print_matrix(matrix *mp)
+{
+	int i, j;
+	for (i = 0; i < mp->rows; i++) {
+		for (j = 0; j < mp->cols; j++)
+			printf("%f ", get_element(mp, i, j));
+		printf("\n");
+	}
+}
+
 inline double get_element(matrix *mp, int i, int j)
 {
 	return *(mp->array + (i + j * mp->rows));

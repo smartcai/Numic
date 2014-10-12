@@ -16,22 +16,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	for (i = 0; i < rows; i++) {
-		for (j = 0; j < cols ; j++) {
-			printf("%f ", get_element(mp, i, j));
-		}
-		printf("\n");
-	}
-
+	print_matrix(mp);
+	print_matrix(tmp);
 	transpose(mp, tmp);
-
-	for (i = 0; i < cols; i++) {
-		for (j = 0; j < rows ; j++) {
-			printf("%f ", get_element(tmp, i, j));
-		}
-		printf("\n");
-	}
-
+	print_matrix(mp);
+	print_matrix(tmp);
 	destroy_matrix(mp);
 	destroy_matrix(tmp);
 	return 0;

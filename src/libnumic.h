@@ -11,6 +11,7 @@ typedef struct matrix matrix;
 /* Interface. */
 matrix *create_matrix(int rows, int cols);
 void destroy_matrix(matrix *mp);
+void print_matrix(matrix *mp);
 inline double get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, double val);
 
