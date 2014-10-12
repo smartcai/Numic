@@ -8,14 +8,15 @@ int main(int argc, char *argv[])
 	int cols = 200;
 	matrix *mp = create_matrix(rows, cols);
 
-	for (i = 0; i < rows; i++) {
-		for (j = 0; j < cols ; j++) {
-			set_element(mp, i, j, i * cols + j);
+	/* Pretend to use columns-major store */
+	for (j = 0; j < cols ; j++) {
+		for (i = 0; i < rows; i++) {
+			set_element(mp, i, j , i + j * rows);
 		}
 	}
 
-	for (i = 0; i < rows; i++) {
-		for (j = 0; j < cols ; j++) {
+	for (j = 0; j < cols ; j++) {
+		for (i = 0; i < rows; i++) {
 			printf("%f ", get_element(mp, i, j));
 		}
 		printf("\n");
@@ -24,4 +25,3 @@ int main(int argc, char *argv[])
 	destroy_matrix(mp);
 	return 0;
 }
-
