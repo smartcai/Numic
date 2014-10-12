@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 /* Incomplete type. */
 typedef struct matrix matrix;
@@ -17,5 +19,6 @@ inline void set_element(matrix *mp, int i, int j, double val);
 
 /* Basic operations. */
 void transpose(matrix *src, matrix* dst);
+void zero_matrix(matrix *mp);
 
 #endif  /* __NUM_LIBNUMIC_H__ */

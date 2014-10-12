@@ -74,3 +74,8 @@ void transpose(matrix *src, matrix* dst)
 		}
 	}
 }
+
+void zero_matrix(matrix *mp)
+{
+	memset(mp->array, 0, mp->cols * mp->rows * sizeof(double));
+}

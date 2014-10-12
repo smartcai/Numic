@@ -9,6 +9,9 @@ int main(int argc, char *argv[])
 	matrix *mp = create_matrix(rows, cols);
 	matrix *tmp = create_matrix(cols, rows);
 
+	print_matrix(mp);
+	print_matrix(tmp);
+
 	/* Pretend to use columns-major store */
 	for (j = 0; j < cols ; j++) {
 		for (i = 0; i < rows; i++) {
@@ -16,11 +19,17 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	print_matrix(mp);
-	print_matrix(tmp);
 	transpose(mp, tmp);
+
 	print_matrix(mp);
 	print_matrix(tmp);
+
+	zero_matrix(mp);
+	zero_matrix(tmp);
+
+	print_matrix(mp);
+	print_matrix(tmp);
+
 	destroy_matrix(mp);
 	destroy_matrix(tmp);
 	return 0;
