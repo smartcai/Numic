@@ -1,6 +1,16 @@
 #include "libnumic.h"
 
-#define FREE_SET_NULL(p) (free(p), p = NULL)
+#define FREE_SET_NULL(p) (free(p), p = NULL)                            \
+
+#define ERR_MSG(Str)                                                    \
+	printf("ERROR: %s: L%d, %s " Str, __FILE__, __LINE__, __FUNCTION__)
+
+#define ASSERT(stmt, S) do {                    \
+		if (!stmt) {                            \
+			ERR_MSG(S);                         \
+			exit(-1);                           \
+		}                                       \
+	} while(0)
 
 /**
  * @matrix: defined as math.
@@ -17,11 +27,9 @@ matrix *create_matrix(int rows, int cols)
 	mp->rows = rows;
 	mp->cols = cols;
 	mp->array = (double*) calloc (cols * rows, sizeof(double));
-	if (mp->array == NULL)
-	{
-		printf("%s: %d, out of memory.\n", __FILE__, __LINE__);
-		exit(-1);
-	}
+
+	ASSERT((mp->array != NULL), ", out of memory.");
+
 	return mp;
 }
 
@@ -46,4 +54,19 @@ void set_element(matrix *mp, int i, int j, double val)
 	int step = mp->rows;
 	int offset = i + j * step;
 	*(p+offset) = val;
+}
+
+void transpose(matrix *src, matrix* dst)
+{
+	int i, j;
+	int n = src->cols;
+	int m = src->rows;
+
+	ASSERT(m == dst->cols && n == dst->rows, ", mismatching size.");
+
+	for (j = 0; j < n; j++) {
+		for (i = 0; i < m; i++) {
+			set_element(dst, j, i, get_element(src, i, j));
+		}
+	}
 }

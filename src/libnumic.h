@@ -14,4 +14,7 @@ void destroy_matrix(matrix *mp);
 double get_element(matrix *mp, int i, int j);
 void set_element(matrix *mp, int i, int j, double val);
 
+/* Basic operations. */
+void transpose(matrix *src, matrix* dst);
+
 #endif  /* __NUM_LIBNUMIC_H__ */
