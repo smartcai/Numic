@@ -3,7 +3,7 @@
 #define FREE_SET_NULL(p) (free(p), p = NULL)                            \
 
 #define ERR_MSG(Str)                                                    \
-	printf("ERROR: %s: L%d, %s " Str, __FILE__, __LINE__, __FUNCTION__)
+	printf("ERROR: %s: L%d, %s " Str "\n", __FILE__, __LINE__, __FUNCTION__)
 
 #define ASSERT(stmt, S) do {                    \
 		if (!stmt) {                            \
@@ -24,6 +24,9 @@ struct matrix {
 matrix *create_matrix(int rows, int cols)
 {
 	matrix *mp = (matrix*) malloc (sizeof(matrix));
+
+	ASSERT((rows > 0 && cols > 0), ", invalid dimensions.");
+
 	mp->rows = rows;
 	mp->cols = cols;
 	mp->array = (double*) calloc (cols * rows, sizeof(double));
@@ -50,6 +53,17 @@ void print_matrix(matrix *mp)
 	}
 }
 
+void copy_matrix(matrix *src, matrix *dst)
+{
+	int n = src->cols;
+	int m = src->rows;
+
+	ASSERT((n == dst->cols && m == dst->rows),  \
+	       ", mismatching size.");
+
+	memcpy(dst->array, src->array, n * m * sizeof(double));
+}
+
 inline double get_element(matrix *mp, int i, int j)
 {
 	return *(mp->array + (i + j * mp->rows));
@@ -66,7 +80,10 @@ void transpose(matrix *src, matrix* dst)
 	int n = src->cols;
 	int m = src->rows;
 
-	ASSERT(m == dst->cols && n == dst->rows, ", mismatching size.");
+	ASSERT((m == dst->cols && n == dst->rows),  \
+	       ", mismatching size.");
+
+	zero_matrix(dst);
 
 	for (j = 0; j < n; j++) {
 		for (i = 0; i < m; i++) {

@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 	int rows = 3;
 	int cols = 4;
 	matrix *mp = create_matrix(rows, cols);
+	matrix *mp2 = create_matrix(rows, cols);
 	matrix *tmp = create_matrix(cols, rows);
 
 	print_matrix(mp);
@@ -19,6 +20,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	copy_matrix(mp, mp2);
+	print_matrix(mp2);
+
 	transpose(mp, tmp);
 
 	print_matrix(mp);
@@ -30,7 +34,11 @@ int main(int argc, char *argv[])
 	print_matrix(mp);
 	print_matrix(tmp);
 
+	copy_matrix(mp, mp2);
+	print_matrix(mp2);
+
 	destroy_matrix(mp);
 	destroy_matrix(tmp);
+	destroy_matrix(mp2);
 	return 0;
 }
