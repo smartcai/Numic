@@ -40,20 +40,14 @@ void destroy_matrix(matrix *mp)
 	FREE_SET_NULL(mp);
 }
 
-double get_element(matrix *mp, int i, int j)
+inline double get_element(matrix *mp, int i, int j)
 {
-	double *p = mp->array;
-	int step = mp->rows;
-	int offset = i + j * step;
-	return *(p+offset);
+	return *(mp->array + (i + j * mp->rows));
 }
 
-void set_element(matrix *mp, int i, int j, double val)
+inline void set_element(matrix *mp, int i, int j, double val)
 {
-	double *p = mp->array;
-	int step = mp->rows;
-	int offset = i + j * step;
-	*(p+offset) = val;
+	*(mp->array + (i + j * mp->rows)) = val;
 }
 
 void transpose(matrix *src, matrix* dst)
