@@ -96,3 +96,48 @@ void zero_matrix(matrix *mp)
 {
 	memset(mp->array, 0, mp->cols * mp->rows * sizeof(scalar));
 }
+
+inline vector *create_col_vector(int dim)
+{
+	return create_matrix(dim, 1);
+}
+
+inline vector *create_row_vector(int dim)
+{
+	return create_matrix(1, dim);
+}
+
+inline void destroy_vector(vector *v)
+{
+	destroy_matrix(v);
+}
+
+inline void print_vector(vector *v)
+{
+	print_matrix(v);
+}
+
+inline void copy_vector(vector *src, vector *dst)
+{
+	copy_matrix(src, dst);
+}
+
+inline scalar get_vector_element(vector *v, int k)
+{
+	return get_element(v, k, 0);
+}
+
+inline void set_vector_element(vector *v, int k, scalar val)
+{
+	set_element(v, k, 0, val);
+}
+
+inline void transpose_vector(vector *src, vector* dst)
+{
+	transpose(src, dst);
+}
+
+inline void zero_vector(vector *v)
+{
+	zero_matrix(v);
+}
