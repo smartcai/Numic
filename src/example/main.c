@@ -45,6 +45,8 @@ void test_matrix(void)
 	copy_matrix(mp1, mp2);
 	print_matrix(mp2);
 
+	printf("%d %d\n", get_rows(mp1), get_cols(mp1));
+
 	destroy_matrix(mp1);
 	destroy_matrix(mp2);
 	destroy_matrix(mpt);
@@ -81,8 +83,11 @@ void test_vector(void)
 
 	print_vector(v2);
 
+	printf("%d\n", get_dim(v1));
+
 	destroy_vector(v1);
 	destroy_vector(v2);
 	destroy_vector(vt);
+
 	printf("****test_vector end****\n");
 }

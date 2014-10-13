@@ -6,11 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Incomplete type. */
+/* Incomplete types. */
 typedef double scalar;
 typedef struct matrix matrix;
+typedef matrix vector;          /* As a 1D matrix */
 
-/* Cache tiling size, defined by user. */
+/* Cache tiling block, defined by user. */
 #define BLOCK_ROWS 64
 #define BLOCK_COLS 48
 
@@ -21,19 +22,12 @@ void print_matrix(matrix *mp);
 void copy_matrix(matrix *src, matrix *dst);
 inline scalar get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, scalar val);
+inline int get_rows(matrix *mp);
+inline int get_cols(matrix *mp);
 
 /* Basic operations. */
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
-
-/**
- * Vector's part: definition and operations. We treat vector as a kind of
- * special matrix. If rows is 1, it is row vector. And if cols is 1, it is
- * column vector. Then all the operations are "syntactic sugars" to the matrix
- * counterparts, with one additional dimension check.
- */
-/* Define vector as matrix. */
-typedef matrix vector;
 
 /* Map the matrix methods to vector. */
 inline vector *create_col_vector(int dim);
@@ -43,6 +37,7 @@ inline void print_vector(vector *v);
 inline void copy_vector(vector *src, vector *dst);
 inline scalar get_vector_element(vector *v, int k);
 inline void set_vector_element(vector *v, int k, scalar val);
+inline int get_dim(vector *v);
 
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);

@@ -81,6 +81,16 @@ inline void set_element(matrix *mp, int i, int j, scalar val)
 	*(mp->array + (i + j * mp->rows)) = val;
 }
 
+inline int get_rows(matrix *mp)
+{
+	return mp->rows;
+}
+
+inline int get_cols(matrix *mp)
+{
+	return mp->cols;
+}
+
 void transpose(matrix *src, matrix* dst)
 {
 	int i, j;
@@ -141,6 +151,11 @@ inline void set_vector_element(vector *v, int k, scalar val)
 {
 	ASSERT((isVector(v)), ", invalid vector.");
 	set_element(v, k, 0, val);
+}
+
+inline int get_dim(vector *v)
+{
+	return isColVector(v) ? v->rows : v->cols;
 }
 
 inline void transpose_vector(vector *src, vector* dst)
