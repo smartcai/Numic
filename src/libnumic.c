@@ -18,7 +18,7 @@
 struct matrix {
 	int cols;
 	int rows;
-	double *array;
+	scalar *array;
 };
 
 matrix *create_matrix(int rows, int cols)
@@ -29,7 +29,7 @@ matrix *create_matrix(int rows, int cols)
 
 	mp->rows = rows;
 	mp->cols = cols;
-	mp->array = (double*) calloc (cols * rows, sizeof(double));
+	mp->array = (scalar*) calloc (cols * rows, sizeof(scalar));
 
 	ASSERT((mp->array != NULL), ", out of memory.");
 
@@ -61,15 +61,15 @@ void copy_matrix(matrix *src, matrix *dst)
 	ASSERT((n == dst->cols && m == dst->rows),  \
 	       ", mismatching size.");
 
-	memcpy(dst->array, src->array, n * m * sizeof(double));
+	memcpy(dst->array, src->array, n * m * sizeof(scalar));
 }
 
-inline double get_element(matrix *mp, int i, int j)
+inline scalar get_element(matrix *mp, int i, int j)
 {
 	return *(mp->array + (i + j * mp->rows));
 }
 
-inline void set_element(matrix *mp, int i, int j, double val)
+inline void set_element(matrix *mp, int i, int j, scalar val)
 {
 	*(mp->array + (i + j * mp->rows)) = val;
 }
@@ -94,5 +94,5 @@ void transpose(matrix *src, matrix* dst)
 
 void zero_matrix(matrix *mp)
 {
-	memset(mp->array, 0, mp->cols * mp->rows * sizeof(double));
+	memset(mp->array, 0, mp->cols * mp->rows * sizeof(scalar));
 }

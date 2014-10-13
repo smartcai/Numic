@@ -7,6 +7,7 @@
 #include <string.h>
 
 /* Incomplete type. */
+typedef double scalar;
 typedef struct matrix matrix;
 
 /* Cache tiling size, defined by user. */
@@ -18,8 +19,8 @@ matrix *create_matrix(int rows, int cols);
 void destroy_matrix(matrix *mp);
 void print_matrix(matrix *mp);
 void copy_matrix(matrix *src, matrix *dst);
-inline double get_element(matrix *mp, int i, int j);
-inline void set_element(matrix *mp, int i, int j, double val);
+inline scalar get_element(matrix *mp, int i, int j);
+inline void set_element(matrix *mp, int i, int j, scalar val);
 
 /* Basic operations. */
 void transpose(matrix *src, matrix* dst);
