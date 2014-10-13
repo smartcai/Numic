@@ -21,6 +21,13 @@ struct matrix {
 	scalar *array;
 };
 
+/**
+ * @vector: a special kind of matrix.
+ */
+#define isRowVector(v) (v->rows == 1)
+#define isColVector(v) (v->cols == 1)
+#define isVector(v) ((isRowVector(v)) ^ (isColVector(v)))
+
 matrix *create_matrix(int rows, int cols)
 {
 	matrix *mp = (matrix*) malloc (sizeof(matrix));
@@ -114,30 +121,36 @@ inline void destroy_vector(vector *v)
 
 inline void print_vector(vector *v)
 {
+	ASSERT((isVector(v)), ", invalid vector.");
 	print_matrix(v);
 }
 
 inline void copy_vector(vector *src, vector *dst)
 {
+	ASSERT((isVector(src) && isVector(dst)), ", invalid vector");
 	copy_matrix(src, dst);
 }
 
 inline scalar get_vector_element(vector *v, int k)
 {
+	ASSERT((isVector(v)), ", invalid vector.");
 	return get_element(v, k, 0);
 }
 
 inline void set_vector_element(vector *v, int k, scalar val)
 {
+	ASSERT((isVector(v)), ", invalid vector.");
 	set_element(v, k, 0, val);
 }
 
 inline void transpose_vector(vector *src, vector* dst)
 {
+	ASSERT((isVector(src) && isVector(dst)), ", invalid vector");
 	transpose(src, dst);
 }
 
 inline void zero_vector(vector *v)
 {
+	ASSERT((isVector(v)), ", invalid vector.");
 	zero_matrix(v);
 }

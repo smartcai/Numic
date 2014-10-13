@@ -28,7 +28,9 @@ void zero_matrix(matrix *mp);
 
 /**
  * Vector's part: definition and operations. We treat vector as a kind of
- * special matrix. Then all the methods are "syntactic sugars".
+ * special matrix. If rows is 1, it is row vector. And if cols is 1, it is
+ * column vector. Then all the operations are "syntactic sugars" to the matrix
+ * counterparts, with one additional dimension check.
  */
 /* Define vector as matrix. */
 typedef matrix vector;
