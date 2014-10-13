@@ -12,33 +12,44 @@
 		}                                       \
 	} while(0)
 
+#define ERR_OUT_OF_MEMORY     ", out of memory."
+#define ERR_MISMATCH_SIZE     ", mismatching size."
+#define ERR_INVALID_DIMENSION ", invalid dimension."
+
 /**
  * @matrix: defined as math.
  */
 struct matrix {
-	int cols;
-	int rows;
+	int     cols;
+	int     rows;
 	scalar *array;
 };
+
+#define isSameSize(m1, m2)                              \
+	((m1->rows == m2->rows) && (m1->cols == m2->cols))
+
+#define isTransposedSize(m1, m2)                        \
+	((m1->rows == m2->cols) && (m1->cols == m2->rows))
+
 
 /**
  * @vector: a special kind of matrix.
  */
 #define isRowVector(v) (v->rows == 1)
 #define isColVector(v) (v->cols == 1)
-#define isVector(v) ((isRowVector(v)) ^ (isColVector(v)))
+#define isVector(v)    ((isRowVector(v)) ^ (isColVector(v)))
 
 matrix *create_matrix(int rows, int cols)
 {
 	matrix *mp = (matrix*) malloc (sizeof(matrix));
 
-	ASSERT((rows > 0 && cols > 0), ", invalid dimensions.");
+	ASSERT((rows > 0 && cols > 0), ERR_INVALID_DIMENSION);
 
 	mp->rows = rows;
 	mp->cols = cols;
 	mp->array = (scalar*) calloc (cols * rows, sizeof(scalar));
 
-	ASSERT((mp->array != NULL), ", out of memory.");
+	ASSERT((mp->array != NULL), ERR_OUT_OF_MEMORY);
 
 	return mp;
 }
@@ -66,7 +77,7 @@ void copy_matrix(matrix *src, matrix *dst)
 	int m = src->rows;
 
 	ASSERT((n == dst->cols && m == dst->rows),  \
-	       ", mismatching size.");
+	       ERR_MISMATCH_SIZE);
 
 	memcpy(dst->array, src->array, n * m * sizeof(scalar));
 }
@@ -98,7 +109,7 @@ void transpose(matrix *src, matrix* dst)
 	int m = src->rows;
 
 	ASSERT((m == dst->cols && n == dst->rows),  \
-	       ", mismatching size.");
+	       ERR_MISMATCH_SIZE);
 
 	zero_matrix(dst);
 
@@ -131,25 +142,25 @@ inline void destroy_vector(vector *v)
 
 inline void print_vector(vector *v)
 {
-	ASSERT((isVector(v)), ", invalid vector.");
+	ASSERT((isVector(v)), ERR_INVALID_DIMENSION);
 	print_matrix(v);
 }
 
 inline void copy_vector(vector *src, vector *dst)
 {
-	ASSERT((isVector(src) && isVector(dst)), ", invalid vector");
+	ASSERT((isVector(src) && isVector(dst)), ERR_INVALID_DIMENSION);
 	copy_matrix(src, dst);
 }
 
 inline scalar get_vector_element(vector *v, int k)
 {
-	ASSERT((isVector(v)), ", invalid vector.");
+	ASSERT((isVector(v)), ERR_INVALID_DIMENSION);
 	return get_element(v, k, 0);
 }
 
 inline void set_vector_element(vector *v, int k, scalar val)
 {
-	ASSERT((isVector(v)), ", invalid vector.");
+	ASSERT((isVector(v)), ERR_INVALID_DIMENSION);
 	set_element(v, k, 0, val);
 }
 
@@ -160,12 +171,29 @@ inline int get_dim(vector *v)
 
 inline void transpose_vector(vector *src, vector* dst)
 {
-	ASSERT((isVector(src) && isVector(dst)), ", invalid vector");
+	ASSERT((isVector(src) && isVector(dst)), ERR_INVALID_DIMENSION);
+	ASSERT((isTransposedSize(src, dst)), ERR_MISMATCH_SIZE);
 	transpose(src, dst);
 }
 
 inline void zero_vector(vector *v)
 {
-	ASSERT((isVector(v)), ", invalid vector.");
+	ASSERT((isVector(v)), ERR_INVALID_DIMENSION);
 	zero_matrix(v);
+}
+
+scalar dot_product(vector *v1, vector *v2)
+{
+	int dot = 0;
+	int dim, k;
+
+	ASSERT((isVector(v1) && isVector(v2)), ERR_INVALID_DIMENSION);
+	ASSERT((isSameSize(v1, v2)), ERR_MISMATCH_SIZE);
+
+	dim = get_dim(v1);
+	for (k = 0; k < dim; k++) {
+		dot += get_vector_element(v1, k) * get_vector_element(v2, k);
+	}
+
+	return dot;
 }

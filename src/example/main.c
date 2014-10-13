@@ -75,6 +75,8 @@ void test_vector(void)
 	copy_vector(v1, v2);
 	print_vector(v2);
 
+	printf("%f\n", dot_product(v1, v2));
+
 	transpose_vector(v1, vt);
 	print_vector(vt);
 

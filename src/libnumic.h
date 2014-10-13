@@ -41,5 +41,6 @@ inline int get_dim(vector *v);
 
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);
+scalar dot_product(vector *v1, vector *v2);
 
 #endif  /* __NUM_LIBNUMIC_H__ */
