@@ -31,6 +31,8 @@ struct matrix {
 #define isTransposedSize(m1, m2)                        \
 	((m1->rows == m2->cols) && (m1->cols == m2->rows))
 
+#define isSquareMatrix(m)                       \
+	(m->rows == m->cols)
 
 /**
  * @vector: a special kind of matrix.
@@ -84,12 +86,12 @@ void copy_matrix(matrix *src, matrix *dst)
 
 inline scalar get_element(matrix *mp, int i, int j)
 {
-	return *(mp->array + (i + j * mp->rows));
+	return mp->array[i + j * mp->rows];
 }
 
 inline void set_element(matrix *mp, int i, int j, scalar val)
 {
-	*(mp->array + (i + j * mp->rows)) = val;
+	mp->array[i + j * mp->rows] = val;
 }
 
 inline int get_rows(matrix *mp)
@@ -124,6 +126,15 @@ void zero_matrix(matrix *mp)
 {
 	memset(mp->array, 0, mp->cols * mp->rows * sizeof(scalar));
 }
+
+/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
+ * {
+ * 	/\* Classical Gram-Schmidt Algorithm. *\/
+ * 
+ * 	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
+ * 	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
+ * 	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
+ * } */
 
 inline vector *create_col_vector(int dim)
 {
@@ -184,16 +195,18 @@ inline void zero_vector(vector *v)
 
 scalar dot_product(vector *v1, vector *v2)
 {
-	int dot = 0;
-	int dim, k;
+	double c;
+	int n, k;
 
 	ASSERT((isVector(v1) && isVector(v2)), ERR_INVALID_DIMENSION);
 	ASSERT((isSameSize(v1, v2)), ERR_MISMATCH_SIZE);
 
-	dim = get_dim(v1);
-	for (k = 0; k < dim; k++) {
-		dot += get_vector_element(v1, k) * get_vector_element(v2, k);
+	n = get_dim(v1);
+
+	c = 0;
+	for (k = 0; k < n; k++) {
+		c += v1->array[k] * v2->array[k];
 	}
 
-	return dot;
+	return c;
 }

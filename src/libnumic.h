@@ -20,14 +20,17 @@ matrix *create_matrix(int rows, int cols);
 void destroy_matrix(matrix *mp);
 void print_matrix(matrix *mp);
 void copy_matrix(matrix *src, matrix *dst);
+
+/* Operations. */
 inline scalar get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, scalar val);
 inline int get_rows(matrix *mp);
 inline int get_cols(matrix *mp);
 
-/* Basic operations. */
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
+
+/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R); */
 
 /* Map the matrix methods to vector. */
 inline vector *create_col_vector(int dim);
@@ -35,6 +38,8 @@ inline vector *create_row_vector(int dim);
 inline void destroy_vector(vector *v);
 inline void print_vector(vector *v);
 inline void copy_vector(vector *src, vector *dst);
+
+/* Operations. */
 inline scalar get_vector_element(vector *v, int k);
 inline void set_vector_element(vector *v, int k, scalar val);
 inline int get_dim(vector *v);
