@@ -33,6 +33,7 @@ inline int get_cols(matrix *mp);
 
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
+void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
 
 void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R);
 
@@ -52,6 +53,7 @@ inline int get_dim(vector *v);
 
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);
+inline void scalar_vector_mul(vector *dst, scalar alpha, vector *src);
 scalar dot_product(vector *v1, vector *v2);
 scalar vector_norm(vector *vp);
 

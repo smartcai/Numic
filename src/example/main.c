@@ -56,9 +56,16 @@ void test_matrix(void)
 	get_col_vector(mp1, 2, vec);
 	printf("vec\n");
 	print_vector(vec);
+	printf("vec\n");
+	scalar_vector_mul(vec, 3.14, vec);
+	print_vector(vec);
 
 	set_col_vector(mp2, 0, vec);
 	printf("mp2\n");
+	print_matrix(mp2);
+
+	printf("mp2\n");
+	scalar_matrix_mul(mp2, 0.5, mp2);
 	print_matrix(mp2);
 
 	transpose(mp1, mpt);

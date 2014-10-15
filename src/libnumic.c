@@ -171,6 +171,21 @@ void zero_matrix(matrix *mp)
 	memset(mp->array, 0, mp->cols * mp->rows * sizeof(scalar));
 }
 
+void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src)
+{
+	/* dst = alpha * src */
+
+	ASSERT(isSameSize(dst, src), ERR_MISMATCH_SIZE);
+
+	int k;
+	int m = src->rows;
+	int n = src->cols;
+
+	for (k = 0; k < m * n; k++) {
+		dst->array[k] = alpha * src->array[k];
+	}
+}
+
 void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
 {
 	/* Classical Gram-Schmidt Algorithm. */
@@ -248,6 +263,12 @@ inline void zero_vector(vector *v)
 {
 	ASSERT((isVector(v)), ERR_INVALID_DIMENSION);
 	zero_matrix(v);
+}
+
+inline void scalar_vector_mul(vector *dst, scalar alpha, vector *src)
+{
+	ASSERT(((isVector(src) && isVector(dst))), ERR_INVALID_DIMENSION);
+	scalar_matrix_mul(dst, alpha, src);
 }
 
 scalar dot_product(vector *v1, vector *v2)
