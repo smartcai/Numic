@@ -75,29 +75,25 @@ void print_matrix(matrix *mp)
 
 void copy_matrix(matrix *src, matrix *dst)
 {
-	int n = src->cols;
-	int m = src->rows;
+	ASSERT(isSameSize(src, dst), ERR_MISMATCH_SIZE);
 
-	ASSERT((n == dst->cols && m == dst->rows),  \
-	       ERR_MISMATCH_SIZE);
-
-	memcpy(dst->array, src->array, n * m * sizeof(scalar));
+	memcpy(dst->array, src->array, src->rows * src->cols * sizeof(scalar));
 }
 
 void get_block(matrix *mat, int i, int j, matrix *blk)
 {
-	/* Get a block of mat to blk, starting from point (i, j), with the same size
-	 * as blk. */
+	/* Get a block from matrix, starting from point (i, j). */
 
 	int k;
 	scalar *p1, *p2;
 
-	ASSERT((((i + blk->rows) <= mat->rows) && ((j + blk->cols) <= mat->cols)) \
-	       , ERR_MISMATCH_SIZE);
+	ASSERT( (i + blk->rows <= mat->rows && j + blk->cols <= mat->cols)  \
+	       , ERR_INVALID_DIMENSION);
 
-	p1 = (scalar*)&(mat->array[i + j * mat->rows]);
-	p2 = (scalar*)&(blk->array[0]);
+	p1 = mat->array + (i + j * mat->rows); /* Point (i, j) */
+	p2 = blk->array;
 
+	/* Copy by columns. */
 	for (k = 0; k < blk->cols; k++) {
 		memcpy(p2, p1, blk->rows * sizeof(scalar));
 		p1 += mat->rows;
@@ -107,18 +103,18 @@ void get_block(matrix *mat, int i, int j, matrix *blk)
 
 void set_block(matrix *mat, int i, int j, matrix *blk)
 {
-	/* Set a block of mat to blk, starting from point (i, j), with the same size
-	 * as blk. */
+	/* Set a block to matrix, starting from point (i, j). */
 
 	int k;
 	scalar *p1, *p2;
 
-	ASSERT((((i + blk->rows) <= mat->rows) && ((j + blk->cols) <= mat->cols)) \
-	       , ERR_MISMATCH_SIZE);
+	ASSERT( (i + blk->rows <= mat->rows && j + blk->cols <= mat->cols)  \
+	       , ERR_INVALID_DIMENSION);
 
-	p1 = (scalar*)&(mat->array[i + j * mat->rows]);
-	p2 = (scalar*)&(blk->array[0]);
+	p1 = mat->array + (i + j * mat->rows); /* Point (i, j) */
+	p2 = blk->array;
 
+	/* Copy by columns. */
 	for (k = 0; k < blk->cols; k++) {
 		memcpy(p1, p2, blk->rows * sizeof(scalar));
 		p1 += mat->rows;
@@ -151,16 +147,13 @@ inline int get_cols(matrix *mp)
 void transpose(matrix *src, matrix* dst)
 {
 	int i, j;
-	int n = src->cols;
-	int m = src->rows;
 
-	ASSERT((m == dst->cols && n == dst->rows),  \
-	       ERR_MISMATCH_SIZE);
+	ASSERT(isTransposedSize(src, dst), ERR_MISMATCH_SIZE);
 
 	zero_matrix(dst);
 
-	for (j = 0; j < n; j++) {
-		for (i = 0; i < m; i++) {
+	for (j = 0; j < src->cols; j++) {
+		for (i = 0; i < src->rows; i++) {
 			set_element(dst, j, i, get_element(src, i, j));
 		}
 	}
@@ -186,27 +179,34 @@ void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src)
 	}
 }
 
-void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
-{
-	/* Classical Gram-Schmidt Algorithm. */
+/* void matrix_mul(matrix *dst, matrix *src1, matrix *src2)
+ * {
+ * 	ASSERT((src1->cols == src2->rows), ERR_MISMATCH_SIZE);
+ * 	ASSERT((dst->rows == src1->rows) && (dst->cols == src2->cols),  \
+ * 	       ERR_MISMATCH_SIZE);
+ * } */
 
-	vector *vp;
-
-	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
-	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
-	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
-
-	vp = create_col_vector(get_rows(src));
-
-	/* Initialization. */
-	copy_matrix(src, Q);
-	zero_matrix(R);
-
-	get_col_vector(src, 0, vp);
-	set_element(R, 0, 0, vector_norm(vp));
-
-	free(vp);
-}
+/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
+ * {
+ * 	/\* Classical Gram-Schmidt Algorithm. *\/
+ * 
+ * 	vector *vp;
+ * 
+ * 	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
+ * 	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
+ * 	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
+ * 
+ * 	vp = create_col_vector(get_rows(src));
+ * 
+ * 	/\* Initialization. *\/
+ * 	copy_matrix(src, Q);
+ * 	zero_matrix(R);
+ * 
+ * 	get_col_vector(src, 0, vp);
+ * 	set_element(R, 0, 0, vector_norm(vp));
+ * 
+ * 	free(vp);
+ * } */
 
 inline vector *create_col_vector(int dim)
 {

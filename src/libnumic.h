@@ -23,6 +23,10 @@ void destroy_matrix(matrix *mp);
 void print_matrix(matrix *mp);
 void copy_matrix(matrix *src, matrix *dst);
 
+/* Scalar operations. */
+/* Saxpy, streaming the data. */
+#define Saxpy(a, x, y) (y = y + a * x)
+
 /* Matrix operations. */
 inline scalar get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, scalar val);
@@ -34,8 +38,9 @@ inline int get_cols(matrix *mp);
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
 void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
+/* void matrix_mul(matrix *dst, matrix *src1, matrix *src2); */
 
-void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R);
+/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R); */
 
 /**
  * Map the matrix methods to vector.
