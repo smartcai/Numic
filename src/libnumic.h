@@ -24,6 +24,8 @@ void copy_matrix(matrix *src, matrix *dst);
 /* Operations. */
 inline scalar get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, scalar val);
+void get_block(matrix *mat, int i, int j, matrix *blk);
+void set_block(matrix *mat, int i, int j, matrix *blk);
 inline int get_rows(matrix *mp);
 inline int get_cols(matrix *mp);
 
@@ -47,5 +49,8 @@ inline int get_dim(vector *v);
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);
 scalar dot_product(vector *v1, vector *v2);
+
+void get_col_vector(matrix *mp, int k, vector *vp);
+void set_col_vector(matrix *mp, int k, vector *vp);
 
 #endif  /* __NUM_LIBNUMIC_H__ */

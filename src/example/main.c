@@ -19,10 +19,15 @@ void test_matrix(void)
 	matrix *mp1 = create_matrix(rows, cols);
 	matrix *mp2 = create_matrix(rows, cols);
 	matrix *mpt = create_matrix(cols, rows);
+	matrix *sub = create_matrix(rows-1, cols-1);
+	vector *vec = create_col_vector(rows);
 
 	printf("****test_matrix start****\n");
+	printf("mp1\n");
 	print_matrix(mp1);
+	printf("mp2\n");
 	print_matrix(mp2);
+	printf("mpt\n");
 	print_matrix(mpt);
 
 	/* Pretend to use columns-major store */
@@ -31,18 +36,41 @@ void test_matrix(void)
 			set_element(mp1, i, j , i + j * rows);
 		}
 	}
+	printf("mp1\n");
 	print_matrix(mp1);
 
 	copy_matrix(mp1, mp2);
+	printf("mp2\n");
+	print_matrix(mp2);
+
+	get_block(mp1, 1, 1, sub);
+	printf("sub\n");
+	print_matrix(sub);
+
+	set_block(mp2, 0, 1, sub);
+	printf("mp2\n");
+	print_matrix(mp2);
+
+	printf("vec\n");
+	print_vector(vec);
+	get_col_vector(mp1, 2, vec);
+	printf("vec\n");
+	print_vector(vec);
+
+	set_col_vector(mp2, 0, vec);
+	printf("mp2\n");
 	print_matrix(mp2);
 
 	transpose(mp1, mpt);
+	printf("mpt\n");
 	print_matrix(mpt);
 
 	zero_matrix(mp1);
+	printf("mp1\n");
 	print_matrix(mp1);
 
 	copy_matrix(mp1, mp2);
+	printf("mp2\n");
 	print_matrix(mp2);
 
 	printf("%d %d\n", get_rows(mp1), get_cols(mp1));
@@ -50,6 +78,8 @@ void test_matrix(void)
 	destroy_matrix(mp1);
 	destroy_matrix(mp2);
 	destroy_matrix(mpt);
+	destroy_matrix(sub);
+	destroy_vector(vec);
 
 	printf("****test_matrix end****\n");
 }

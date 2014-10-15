@@ -84,13 +84,57 @@ void copy_matrix(matrix *src, matrix *dst)
 	memcpy(dst->array, src->array, n * m * sizeof(scalar));
 }
 
+void get_block(matrix *mat, int i, int j, matrix *blk)
+{
+	/* Get a block of mat to blk, starting from point (i, j), with the same size
+	 * as blk. */
+
+	int k;
+	scalar *p1, *p2;
+
+	ASSERT((((i + blk->rows) <= mat->rows) && ((j + blk->cols) <= mat->cols)) \
+	       , ERR_MISMATCH_SIZE);
+
+	p1 = (scalar*)&(mat->array[i + j * mat->rows]);
+	p2 = (scalar*)&(blk->array[0]);
+
+	for (k = 0; k < blk->cols; k++) {
+		memcpy(p2, p1, blk->rows * sizeof(scalar));
+		p1 += mat->rows;
+		p2 += blk->rows;
+	}
+}
+
+void set_block(matrix *mat, int i, int j, matrix *blk)
+{
+	/* Set a block of mat to blk, starting from point (i, j), with the same size
+	 * as blk. */
+
+	int k;
+	scalar *p1, *p2;
+
+	ASSERT((((i + blk->rows) <= mat->rows) && ((j + blk->cols) <= mat->cols)) \
+	       , ERR_MISMATCH_SIZE);
+
+	p1 = (scalar*)&(mat->array[i + j * mat->rows]);
+	p2 = (scalar*)&(blk->array[0]);
+
+	for (k = 0; k < blk->cols; k++) {
+		memcpy(p1, p2, blk->rows * sizeof(scalar));
+		p1 += mat->rows;
+		p2 += blk->rows;
+	}
+}
+
 inline scalar get_element(matrix *mp, int i, int j)
 {
+	/* Column-Major Order */
 	return mp->array[i + j * mp->rows];
 }
 
 inline void set_element(matrix *mp, int i, int j, scalar val)
 {
+	/* Column-Major Order */
 	mp->array[i + j * mp->rows] = val;
 }
 
@@ -209,4 +253,26 @@ scalar dot_product(vector *v1, vector *v2)
 	}
 
 	return c;
+}
+
+void get_col_vector(matrix *mp, int k, vector *vp)
+{
+	/* Get the k-th column vector. */
+
+	ASSERT(isColVector(vp), ERR_INVALID_DIMENSION);
+	ASSERT((get_rows(mp) == get_dim(vp)), ERR_MISMATCH_SIZE);
+	ASSERT((k < get_cols(mp)), ERR_INVALID_DIMENSION);
+
+	get_block(mp, 0, k, vp);
+}
+
+void set_col_vector(matrix *mp, int k, vector *vp)
+{
+	/* Get the k-th column vector. */
+
+	ASSERT(isColVector(vp), ERR_INVALID_DIMENSION);
+	ASSERT((get_rows(mp) == get_dim(vp)), ERR_MISMATCH_SIZE);
+	ASSERT((k < get_cols(mp)), ERR_INVALID_DIMENSION);
+
+	set_block(mp, 0, k, vp);
 }
