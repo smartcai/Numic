@@ -171,14 +171,27 @@ void zero_matrix(matrix *mp)
 	memset(mp->array, 0, mp->cols * mp->rows * sizeof(scalar));
 }
 
-/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
- * {
- * 	/\* Classical Gram-Schmidt Algorithm. *\/
- * 
- * 	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
- * 	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
- * 	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
- * } */
+void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
+{
+	/* Classical Gram-Schmidt Algorithm. */
+
+	vector *vp;
+
+	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
+	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
+	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
+
+	vp = create_col_vector(get_rows(src));
+
+	/* Initialization. */
+	copy_matrix(src, Q);
+	zero_matrix(R);
+
+	get_col_vector(src, 0, vp);
+	set_element(R, 0, 0, vector_norm(vp));
+
+	free(vp);
+}
 
 inline vector *create_col_vector(int dim)
 {
@@ -253,6 +266,11 @@ scalar dot_product(vector *v1, vector *v2)
 	}
 
 	return c;
+}
+
+scalar vector_norm(vector *vp)
+{
+	return sqrt(dot_product(vp, vp));
 }
 
 void get_col_vector(matrix *mp, int k, vector *vp)

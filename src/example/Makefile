@@ -1,11 +1,11 @@
 CC=gcc
 INC=../
 FILES=main.c ../libnumic.c
-CFLAGS=-I$(INC)
+CFLAGS=-I$(INC) -lm
 
 .PHONY: all
 all:
-	$(CC) $(CFLAGS) $(FILES)
+	$(CC) $(FILES) $(CFLAGS)
 
 .PHONY: clean
 clean:

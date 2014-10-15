@@ -106,6 +106,8 @@ void test_vector(void)
 	print_vector(v2);
 
 	printf("%f\n", dot_product(v1, v2));
+	printf("%f\n", vector_norm(v1));
+	printf("%f\n", vector_norm(v2));
 
 	transpose_vector(v1, vt);
 	print_vector(vt);

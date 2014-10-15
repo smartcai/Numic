@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
 
 /* Incomplete types. */
 typedef double scalar;
@@ -21,7 +23,7 @@ void destroy_matrix(matrix *mp);
 void print_matrix(matrix *mp);
 void copy_matrix(matrix *src, matrix *dst);
 
-/* Operations. */
+/* Matrix operations. */
 inline scalar get_element(matrix *mp, int i, int j);
 inline void set_element(matrix *mp, int i, int j, scalar val);
 void get_block(matrix *mat, int i, int j, matrix *blk);
@@ -32,16 +34,18 @@ inline int get_cols(matrix *mp);
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
 
-/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R); */
+void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R);
 
-/* Map the matrix methods to vector. */
+/**
+ * Map the matrix methods to vector.
+ */
 inline vector *create_col_vector(int dim);
 inline vector *create_row_vector(int dim);
 inline void destroy_vector(vector *v);
 inline void print_vector(vector *v);
 inline void copy_vector(vector *src, vector *dst);
 
-/* Operations. */
+/* Vector operations. */
 inline scalar get_vector_element(vector *v, int k);
 inline void set_vector_element(vector *v, int k, scalar val);
 inline int get_dim(vector *v);
@@ -49,6 +53,7 @@ inline int get_dim(vector *v);
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);
 scalar dot_product(vector *v1, vector *v2);
+scalar vector_norm(vector *vp);
 
 void get_col_vector(matrix *mp, int k, vector *vp);
 void set_col_vector(matrix *mp, int k, vector *vp);
