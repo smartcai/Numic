@@ -82,6 +82,12 @@ void test_matrix(void)
 
 	printf("%d %d\n", get_rows(mp1), get_cols(mp1));
 
+	printf("mpt\n");
+	print_matrix(mpt);
+	transpose(mpt, mpt);
+	printf("mpt\n");
+	print_matrix(mpt);
+
 	destroy_matrix(mp1);
 	destroy_matrix(mp2);
 	destroy_matrix(mpt);

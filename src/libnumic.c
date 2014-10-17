@@ -80,6 +80,9 @@ void copy_matrix(matrix *src, matrix *dst)
 {
 	ASSERT(isSameBufSize(src, dst), ERR_MISMATCH_SIZE);
 
+	dst->rows = src->rows;
+	dst->cols = src->cols;
+
 	memcpy(dst->array, src->array, src->rows * src->cols * sizeof(scalar));
 }
 
@@ -151,9 +154,9 @@ void transpose(matrix *src, matrix* dst)
 {
 	int i, j;
 
-	ASSERT(isTransposedSize(src, dst), ERR_MISMATCH_SIZE);
+	ASSERT(isSameBufSize(src, dst), ERR_MISMATCH_SIZE);
 
-	matrix *tmp = create_matrix(dst->rows, dst->cols);
+	matrix *tmp = create_matrix(src->cols, src->rows);
 
 	for (j = 0; j < src->cols; j++) {
 		for (i = 0; i < src->rows; i++) {
