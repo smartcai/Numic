@@ -5,6 +5,7 @@ void test_matrix(void);
 void test_vector(void);
 void test_saxpy(void);
 void test_gaxpy(void);
+void test_matrix_mul(void);
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
 	test_vector();
 	test_saxpy();
 	test_gaxpy();
+	test_matrix_mul();
 	return 0;
 }
 
@@ -220,4 +222,40 @@ void test_gaxpy(void)
 	destroy_vector(x);
 	destroy_matrix(A);
 	printf("**** Test gaxpy end ****\n");
+}
+
+void test_matrix_mul(void)
+{
+	printf("**** Test matrix_mul ****\n");
+	int m = 5, r = 3, n = 4;
+	matrix *A = create_matrix(m, r);
+	matrix *B = create_matrix(r, n);
+	matrix *C = create_matrix(m, n);
+
+	int i, j, k;
+
+	for (j = 0; j < r; j++) {
+		for (i = 0; i < m; i++) {
+			set_element( A, i, j, (i + j) / 10.0 );
+		}
+	}
+	printf("A\n");
+	print_matrix(A);
+
+	for (j = 0; j < n; j++) {
+		for (i = 0; i < r; i++) {
+			set_element( B, i, j, (2 * i + j) / 10.0 );
+		}
+	}
+	printf("B\n");
+	print_matrix(B);
+
+	matrix_mul(C, A, B);
+	printf("C\n");
+	print_matrix(C);
+
+	destroy_matrix(A);
+	destroy_matrix(B);
+	destroy_matrix(C);
+	printf("**** Test matrix_mul end ****\n");
 }

@@ -34,7 +34,7 @@ inline int get_cols(matrix *mp);
 void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
 void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
-/* void matrix_mul(matrix *dst, matrix *src1, matrix *src2); */
+void matrix_mul(matrix *dst, matrix *src1, matrix *src2);
 
 /* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R); */
 

@@ -188,12 +188,36 @@ void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src)
 	}
 }
 
-/* void matrix_mul(matrix *dst, matrix *src1, matrix *src2)
- * {
- * 	ASSERT((src1->cols == src2->rows), ERR_MISMATCH_SIZE);
- * 	ASSERT((dst->rows == src1->rows) && (dst->cols == src2->cols),  \
- * 	       ERR_MISMATCH_SIZE);
- * } */
+void matrix_mul(matrix *dst, matrix *src1, matrix *src2)
+{
+	/* dst = src1 * src2 */
+
+	int m, r, n;
+	int i, j, k;
+	vector *y, *x;
+
+	ASSERT((src1->cols == src2->rows), ERR_MISMATCH_SIZE);
+	ASSERT((dst->rows == src1->rows) && (dst->cols == src2->cols),  \
+	       ERR_MISMATCH_SIZE);
+
+	m = get_rows(src1);
+	r = get_cols(src1);
+	n = get_cols(src2);
+
+	zero_matrix(dst);
+	y = create_col_vector(m);
+	x = create_col_vector(r);
+
+	for (j = 0; j < n; j++) {
+		zero_vector(y);
+		get_col_vector(src2, j, x);
+		gaxpy(y, src1, x);
+		set_col_vector(dst, j, y);
+	}
+
+	destroy_matrix(y);
+	destroy_matrix(x);
+}
 
 /* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
  * {
