@@ -101,6 +101,7 @@ void test_vector(void)
 {
 	int k;
 	int dim = 5;
+	scalar a = 3.14;
 	vector *v1 = create_col_vector(dim);
 	vector *v2 = create_col_vector(dim);
 	vector *vt = create_row_vector(dim);
@@ -111,9 +112,16 @@ void test_vector(void)
 	print_vector(vt);
 
 	for (k = 0; k < dim; k++) {
-		set_vector_element(v1, k, k*k);
+		set_vector_element(v1, k, k);
 	}
+	printf("v1\n");
 	print_vector(v1);
+
+	printf("Test saxpy:\n");
+	saxpy(v1, a, v1);
+	print_vector(v1);
+	saxpy(v2, 2, v1);
+	print_vector(v2);
 
 	copy_vector(v1, v2);
 	print_vector(v2);

@@ -280,6 +280,18 @@ inline void scalar_vector_mul(vector *dst, scalar alpha, vector *src)
 	scalar_matrix_mul(dst, alpha, src);
 }
 
+inline void saxpy(vector *y, scalar a, vector *x)
+{
+	/* Saxpy: y = y + ax */
+	int k, n = get_dim(y);
+
+	ASSERT(isSameSize(y, x), ERR_MISMATCH_SIZE);
+
+	for (k = 0; k < n; k++) {
+		y->array[k] = y->array[k] + a * x->array[k];
+	}
+}
+
 scalar dot_product(vector *v1, vector *v2)
 {
 	double c;
