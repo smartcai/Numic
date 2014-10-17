@@ -55,7 +55,9 @@ inline int get_dim(vector *v);
 inline void transpose_vector(vector *src, vector* dst);
 inline void zero_vector(vector *v);
 inline void scalar_vector_mul(vector *dst, scalar alpha, vector *src);
-inline void saxpy(vector *y, scalar a, vector *x);
+
+void saxpy(vector *y, scalar a, vector *x);
+void gaxpy(vector *y, matrix *A, vector *x);
 scalar dot_product(vector *v1, vector *v2);
 scalar vector_norm(vector *vp);
 

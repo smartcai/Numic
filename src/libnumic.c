@@ -280,7 +280,7 @@ inline void scalar_vector_mul(vector *dst, scalar alpha, vector *src)
 	scalar_matrix_mul(dst, alpha, src);
 }
 
-inline void saxpy(vector *y, scalar a, vector *x)
+void saxpy(vector *y, scalar a, vector *x)
 {
 	/* Saxpy: y = y + ax */
 	int k, n = get_dim(y);
@@ -290,6 +290,27 @@ inline void saxpy(vector *y, scalar a, vector *x)
 	for (k = 0; k < n; k++) {
 		y->array[k] = y->array[k] + a * x->array[k];
 	}
+}
+
+void gaxpy(vector *y, matrix *A, vector *x)
+{
+	/* Gaxpy: y = y + Ax */
+	int m, n, j;
+	vector *vp;
+
+	ASSERT((get_rows(A) == get_dim(y)), ERR_MISMATCH_SIZE);
+	ASSERT((get_cols(A) == get_dim(x)), ERR_MISMATCH_SIZE);
+
+	m = get_rows(A);
+	n = get_cols(A);
+	vp = create_col_vector(m);
+
+	for (j = 0; j < n; j++) {
+		get_col_vector(A, j, vp);
+		saxpy(y, x->array[j], vp);
+	}
+
+	destroy_vector(vp);
 }
 
 scalar dot_product(vector *v1, vector *v2)

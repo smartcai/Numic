@@ -3,11 +3,15 @@
 
 void test_matrix(void);
 void test_vector(void);
+void test_saxpy(void);
+void test_gaxpy(void);
 
 int main(int argc, char *argv[])
 {
 	test_matrix();
 	test_vector();
+	test_saxpy();
+	test_gaxpy();
 	return 0;
 }
 
@@ -145,4 +149,75 @@ void test_vector(void)
 	destroy_vector(vt);
 
 	printf("****test_vector end****\n");
+}
+
+void test_saxpy(void)
+{
+	printf("**** Test saxpy ****\n");
+	vector *y, *x;
+	scalar a = 3.14;
+
+	int n = 10, k;
+
+	y = create_col_vector(n);
+	x = create_col_vector(n);
+	for (k = 0; k < n; k++) {
+		set_vector_element(y, k, 1);
+		set_vector_element(x, k, k);
+	}
+
+	printf("y\n");
+	print_vector(y);
+	printf("x\n");
+	print_vector(x);
+	saxpy(y, a, x);
+	printf("y after saxpy\n");
+	print_vector(y);
+
+	destroy_vector(y);
+	destroy_vector(x);
+	printf("**** Test saxpy end ****\n");
+}
+
+void test_gaxpy(void)
+{
+	printf("**** Test gaxpy ****\n");
+	vector *y, *x;
+	matrix *A;
+
+	int n = 10, m = 5, i, j, k;
+
+	y = create_col_vector(m);
+	x = create_col_vector(n);
+	A = create_matrix(m, n);
+
+	for (k = 0; k < m; k++) {
+		set_vector_element(y, k, 1);
+	}
+
+	for (k = 0; k < n; k++) {
+		set_vector_element(x, k, k);
+	}
+
+	for (j = 0; j < n; j++) {
+		for (i = 0; i < m; i++) {
+			set_element( A, i, j, (i + j) / 10.0 );
+		}
+	}
+
+
+	printf("A\n");
+	print_matrix(A);
+	printf("y\n");
+	print_vector(y);
+	printf("x\n");
+	print_vector(x);
+	gaxpy(y, A, x);
+	printf("y after gaxpy\n");
+	print_vector(y);
+
+	destroy_vector(y);
+	destroy_vector(x);
+	destroy_matrix(A);
+	printf("**** Test gaxpy end ****\n");
 }
