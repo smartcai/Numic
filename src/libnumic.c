@@ -28,6 +28,9 @@ struct matrix {
 #define isSameSize(m1, m2)                              \
 	((m1->rows == m2->rows) && (m1->cols == m2->cols))
 
+#define isSameBufSize(m1, m2)                       \
+	(m1->rows * m1->cols == m2->rows * m2->cols)
+
 #define isTransposedSize(m1, m2)                        \
 	((m1->rows == m2->cols) && (m1->cols == m2->rows))
 
@@ -75,7 +78,7 @@ void print_matrix(matrix *mp)
 
 void copy_matrix(matrix *src, matrix *dst)
 {
-	ASSERT(isSameSize(src, dst), ERR_MISMATCH_SIZE);
+	ASSERT(isSameBufSize(src, dst), ERR_MISMATCH_SIZE);
 
 	memcpy(dst->array, src->array, src->rows * src->cols * sizeof(scalar));
 }
@@ -150,13 +153,16 @@ void transpose(matrix *src, matrix* dst)
 
 	ASSERT(isTransposedSize(src, dst), ERR_MISMATCH_SIZE);
 
-	zero_matrix(dst);
+	matrix *tmp = create_matrix(dst->rows, dst->cols);
 
 	for (j = 0; j < src->cols; j++) {
 		for (i = 0; i < src->rows; i++) {
-			set_element(dst, j, i, get_element(src, i, j));
+			set_element(tmp, j, i, get_element(src, i, j));
 		}
 	}
+
+	copy_matrix(tmp, dst);
+	destroy_matrix(tmp);
 }
 
 void zero_matrix(matrix *mp)
