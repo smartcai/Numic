@@ -36,7 +36,7 @@ void zero_matrix(matrix *mp);
 void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
 void matrix_mul(matrix *dst, matrix *src1, matrix *src2);
 
-/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R); */
+void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R);
 
 /**
  * Map the matrix methods to vector.

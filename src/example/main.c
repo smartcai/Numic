@@ -6,6 +6,7 @@ void test_vector(void);
 void test_saxpy(void);
 void test_gaxpy(void);
 void test_matrix_mul(void);
+void test_qr_decompose_cgs(void);
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
 	test_saxpy();
 	test_gaxpy();
 	test_matrix_mul();
+	test_qr_decompose_cgs();
 	return 0;
 }
 
@@ -258,4 +260,49 @@ void test_matrix_mul(void)
 	destroy_matrix(B);
 	destroy_matrix(C);
 	printf("**** Test matrix_mul end ****\n");
+}
+
+void test_qr_decompose_cgs(void)
+{
+	printf("**** Test qr_decompose_cgs ****\n");
+	int m = 3, r = 2, n = 2;
+	matrix *A = create_matrix(m, n);
+	matrix *Q = create_matrix(m, n);
+	matrix *R = create_matrix(n, n);
+	vector *q1 = create_col_vector(m);
+	vector *q2 = create_col_vector(m);
+	scalar c = 0;
+
+	int i, j, k;
+
+	for (j = 0; j < r; j++) {
+		for (i = 0; i < m; i++) {
+			set_element( A, i, j, (i + j) );
+		}
+	}
+	printf("A\n");
+	print_matrix(A);
+
+	qr_decompose_cgs(A, Q, R);
+	printf("Q\n");
+	print_matrix(Q);
+	printf("R\n");
+	print_matrix(R);
+
+	matrix_mul(A, Q, R);
+	printf("A\n");
+	print_matrix(A);
+
+	get_col_vector(Q, 0, q1);
+	get_col_vector(Q, 1, q2);
+
+	c = dot_product(q1, q2);
+	printf("dot(q1, q2): %f\n", c);
+
+	destroy_matrix(A);
+	destroy_matrix(Q);
+	destroy_matrix(R);
+	destroy_vector(q1);
+	destroy_vector(q2);
+	printf("**** Test qr_decompose_cgs end ****\n");
 }

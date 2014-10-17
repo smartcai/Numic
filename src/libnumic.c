@@ -1,6 +1,10 @@
 #include "libnumic.h"
 
-#define FREE_SET_NULL(p) (free(p), p = NULL)                            \
+#define EPSILON (pow(2.0, -50))
+#define ABS_F(x) (x < 0 ? -x : x)
+#define isNotZero(x) (ABS_F(x) > EPSILON)
+
+#define FREE_SET_NULL(p) (free(p), p = NULL)
 
 #define ERR_MSG(Str)                                                    \
 	printf("ERROR: %s: L%d, %s " Str "\n", __FILE__, __LINE__, __FUNCTION__)
@@ -15,6 +19,7 @@
 #define ERR_OUT_OF_MEMORY     ", out of memory."
 #define ERR_MISMATCH_SIZE     ", mismatching size."
 #define ERR_INVALID_DIMENSION ", invalid dimension."
+#define ERR_DIVIDE_BY_ZERO    ", divide by zero."
 
 /**
  * @matrix: defined as math.
@@ -219,27 +224,55 @@ void matrix_mul(matrix *dst, matrix *src1, matrix *src2)
 	destroy_matrix(x);
 }
 
-/* void qr_decompose_cgs(matrix *src, matrix *Q, matrix *R)
- * {
- * 	/\* Classical Gram-Schmidt Algorithm. *\/
- * 
- * 	vector *vp;
- * 
- * 	ASSERT(isSameSize(src, Q), ERR_MISMATCH_SIZE);
- * 	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
- * 	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
- * 
- * 	vp = create_col_vector(get_rows(src));
- * 
- * 	/\* Initialization. *\/
- * 	copy_matrix(src, Q);
- * 	zero_matrix(R);
- * 
- * 	get_col_vector(src, 0, vp);
- * 	set_element(R, 0, 0, vector_norm(vp));
- * 
- * 	free(vp);
- * } */
+void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R)
+{
+	/* CGS - Classical Gram-Schmidt Algorithm. */
+
+	vector *Ak, *Qk;
+	scalar L2, r;
+	int m, n;
+	int k, kk;
+
+	ASSERT(isSameSize(A, Q), ERR_MISMATCH_SIZE);
+	ASSERT(isSquareMatrix(R), ERR_MISMATCH_SIZE);
+	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
+
+	m = get_rows(A);
+	n = get_cols(A);
+	Ak = create_col_vector(m);
+	Qk = create_col_vector(m);
+
+	/* Initialization. */
+	copy_matrix(A, Q);
+	zero_matrix(R);
+
+	get_col_vector(A, 0, Ak);
+	L2 = vector_norm(Ak);
+	set_element(R, 0, 0, L2);
+
+	ASSERT(isNotZero(L2), ERR_DIVIDE_BY_ZERO);
+	scalar_vector_mul(Ak, 1.0 / L2, Ak);
+	set_col_vector(Q, 0, Ak);
+
+	for (k = 1; k < n; k++) {
+		get_col_vector(A, k, Ak);
+		for (kk = 0; kk < k; kk++) {
+			get_col_vector(Q, kk, Qk);
+			r = dot_product(Ak, Qk);
+			set_element(R, kk, k, r);
+			r = -r;
+			saxpy(Ak, r, Qk);
+		}
+		L2 = vector_norm(Ak);
+		set_element(R, k, k, L2);
+		ASSERT(isNotZero(L2), ERR_DIVIDE_BY_ZERO);
+		scalar_vector_mul(Ak, 1.0 / L2, Ak);
+		set_col_vector(Q, k, Ak);
+	}
+
+	destroy_matrix(Ak);
+	destroy_matrix(Qk);
+}
 
 inline vector *create_col_vector(int dim)
 {
