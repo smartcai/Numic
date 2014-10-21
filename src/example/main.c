@@ -312,16 +312,16 @@ void test_qr_decompose_cgs(void)
 void test_householder_vector(void)
 {
 	printf("**** Test householder_vector ****\n");
-	vector *x, *v;
+	vector *x, *v, *y;
 	scalar beta;
 	int k;
 	int m = 7, i;
 
 	matrix *I;
-	matrix *prod; 
-
+	matrix *prod;
 	x = create_col_vector(m);
 	v = create_col_vector(m);
+	y = create_col_vector(m);
 	I = create_matrix(m, m);
 	prod = create_matrix(m, m);
 
@@ -347,13 +347,21 @@ void test_householder_vector(void)
 	printf("prod\n");
 	print_matrix(prod);
 
+	scalar_matrix_mul(prod, beta, prod);
 	subtract_matrix(I, prod);
 	printf("I\n");
 	print_matrix(I);
+
+	gaxpy(y, I, x);
+	printf("y\n");
+	print_vector(y);
+
+	printf("norm x:%f\n", vector_norm(x));
 
 	destroy_vector(x);
 	destroy_vector(v);
 	destroy_matrix(I);
 	destroy_matrix(prod);
+	destroy_matrix(y);
 	printf("**** Test householder_vector end ****\n");
 }

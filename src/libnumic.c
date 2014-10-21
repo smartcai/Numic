@@ -461,19 +461,19 @@ void householder_vector(vector *x, vector *v, scalar *beta, int k)
 	scalar sigma = dot_product(x, x) - xk * xk;
 	scalar mu;
 	copy_vector(x, v);
-	set_vector_element(v, 0, 1);
+	set_vector_element(v, k, 1);
 
 	if (isZero(sigma) && xk >= 0)
 		*beta = 0;
 	else if (isZero(sigma) && xk < 0)
 		*beta = -2;
 	else {
-		mu = vector_norm(x);
+		mu = sqrt(xk * xk + sigma);
 		if (xk <= 0)
 			vk = xk - mu;
 		else
 			vk = -sigma / (xk + mu);
-		set_vector_element( v, 0, vk );
+		set_vector_element( v, k, vk );
 		*beta = 2 * vk * vk / (sigma + vk * vk);
 		scalar_vector_mul(v, 1.0 / vk, v);
 	}
