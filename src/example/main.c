@@ -7,6 +7,7 @@ void test_saxpy(void);
 void test_gaxpy(void);
 void test_matrix_mul(void);
 void test_qr_decompose_cgs(void);
+void test_householder_vector(void);
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
 	test_gaxpy();
 	test_matrix_mul();
 	test_qr_decompose_cgs();
+	test_householder_vector();
 	return 0;
 }
 
@@ -305,4 +307,53 @@ void test_qr_decompose_cgs(void)
 	destroy_vector(q1);
 	destroy_vector(q2);
 	printf("**** Test qr_decompose_cgs end ****\n");
+}
+
+void test_householder_vector(void)
+{
+	printf("**** Test householder_vector ****\n");
+	vector *x, *v;
+	scalar beta;
+	int k;
+	int m = 7, i;
+
+	matrix *I;
+	matrix *prod; 
+
+	x = create_col_vector(m);
+	v = create_col_vector(m);
+	I = create_matrix(m, m);
+	prod = create_matrix(m, m);
+
+	for (i = 0; i < m; i++) {
+		set_element(I, i, i, 1);
+	}
+
+	printf("I\n");
+	print_matrix(I);
+
+	for (i = 0; i < m; i++) {
+		set_vector_element(x, i, pow(-1, i) * sqrt(i));
+	}
+
+	printf("x\n");
+	print_vector(x);
+	householder_vector(x, v, &beta, 3);
+	printf("v\n");
+	print_vector(v);
+	printf("beta: %f\n", beta);
+
+	out_product(prod, v, v);
+	printf("prod\n");
+	print_matrix(prod);
+
+	subtract_matrix(I, prod);
+	printf("I\n");
+	print_matrix(I);
+
+	destroy_vector(x);
+	destroy_vector(v);
+	destroy_matrix(I);
+	destroy_matrix(prod);
+	printf("**** Test householder_vector end ****\n");
 }

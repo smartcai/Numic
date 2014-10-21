@@ -3,6 +3,7 @@
 #define EPSILON (pow(2.0, -50))
 #define ABS_F(x) (x < 0 ? -x : x)
 #define isNotZero(x) (ABS_F(x) > EPSILON)
+#define isZero(x) (ABS_F(x) <= EPSILON)
 
 #define FREE_SET_NULL(p) (free(p), p = NULL)
 
@@ -224,6 +225,20 @@ void matrix_mul(matrix *dst, matrix *src1, matrix *src2)
 	destroy_matrix(x);
 }
 
+void subtract_matrix(matrix *dst, matrix *src)
+{
+	int m, n, k;
+
+	ASSERT(isSameSize(dst, src), ERR_MISMATCH_SIZE);
+
+	m = get_rows(dst);
+	n = get_cols(src);
+
+	for (k = 0; k < m * n; k++) {
+		dst->array[k] -= src->array[k];
+	}
+}
+
 void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R)
 {
 	/* CGS - Classical Gram-Schmidt Algorithm. */
@@ -393,6 +408,25 @@ scalar vector_norm(vector *vp)
 	return sqrt(dot_product(vp, vp));
 }
 
+void out_product(matrix *mp, vector *v1, vector *v2)
+{
+	/* mp = v1 * transpose(v2) */
+	int m = get_dim(v1);
+	int n = get_dim(v2);
+	int i, j;
+	scalar product;
+
+	ASSERT((m == get_rows(mp)), ERR_MISMATCH_SIZE);
+	ASSERT((n == get_cols(mp)), ERR_MISMATCH_SIZE);
+
+	for (j = 0; j < n; j++) {
+		for (i = 0; i < m; i++) {
+			product = get_vector_element(v1, i) * get_vector_element(v2, j);
+			set_element(mp, i, j, product);
+		}
+	}
+}
+
 void get_col_vector(matrix *mp, int k, vector *vp)
 {
 	/* Get the k-th column vector. */
@@ -413,4 +447,34 @@ void set_col_vector(matrix *mp, int k, vector *vp)
 	ASSERT((k < get_cols(mp)), ERR_INVALID_DIMENSION);
 
 	set_block(mp, 0, k, vp);
+}
+
+void householder_vector(vector *x, vector *v, scalar *beta, int k)
+{
+	/**
+	 * Rotate x to the dimension of k.
+	 * (I - beta*v*vt)x =   norm(x) * e(k) if x(k) <  0
+	 * (I - beta*v*vt)x = - norm(x) * e(k) if x(k) >= 0
+	 */
+	int m = get_dim(x);
+	scalar xk = get_vector_element(x, k), vk;
+	scalar sigma = dot_product(x, x) - xk * xk;
+	scalar mu;
+	copy_vector(x, v);
+	set_vector_element(v, 0, 1);
+
+	if (isZero(sigma) && xk >= 0)
+		*beta = 0;
+	else if (isZero(sigma) && xk < 0)
+		*beta = -2;
+	else {
+		mu = vector_norm(x);
+		if (xk <= 0)
+			vk = xk - mu;
+		else
+			vk = -sigma / (xk + mu);
+		set_vector_element( v, 0, vk );
+		*beta = 2 * vk * vk / (sigma + vk * vk);
+		scalar_vector_mul(v, 1.0 / vk, v);
+	}
 }

@@ -35,6 +35,7 @@ void transpose(matrix *src, matrix* dst);
 void zero_matrix(matrix *mp);
 void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
 void matrix_mul(matrix *dst, matrix *src1, matrix *src2);
+void subtract_matrix(matrix *dst, matrix *src);
 
 void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R);
 
@@ -60,8 +61,11 @@ void saxpy(vector *y, scalar a, vector *x);
 void gaxpy(vector *y, matrix *A, vector *x);
 scalar dot_product(vector *v1, vector *v2);
 scalar vector_norm(vector *vp);
+void out_product(matrix *mp, vector *v1, vector *v2);
 
 void get_col_vector(matrix *mp, int k, vector *vp);
 void set_col_vector(matrix *mp, int k, vector *vp);
+
+void householder_vector(vector *x, vector *v, scalar *beta, int k);
 
 #endif  /* __NUM_LIBNUMIC_H__ */
