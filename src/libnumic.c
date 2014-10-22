@@ -48,7 +48,7 @@ struct matrix {
  */
 #define isRowVector(v) (v->rows == 1)
 #define isColVector(v) (v->cols == 1)
-#define isVector(v)    ((isRowVector(v)) ^ (isColVector(v)))
+#define isVector(v)    ((isRowVector(v)) || (isColVector(v)))
 
 matrix *create_matrix(int rows, int cols)
 {
