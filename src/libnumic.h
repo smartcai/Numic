@@ -36,6 +36,7 @@ void zero_matrix(matrix *mp);
 void scalar_matrix_mul(matrix *dst, scalar alpha, matrix *src);
 void matrix_mul(matrix *dst, matrix *src1, matrix *src2);
 void subtract_matrix(matrix *dst, matrix *src);
+void add_matrix(matrix *dst, matrix *src);
 
 void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R);
 

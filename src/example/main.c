@@ -379,7 +379,7 @@ void test_house_matrix_columns(void)
 
 	for (j = 0; j < n; j++) {
 		for (i = 0; i < m; i++) {
-			set_element(A, i, j, i + j);
+			set_element( A, i, j, (i - j * j) / (i + j + 10.0) );
 		}
 	}
 

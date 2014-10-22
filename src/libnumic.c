@@ -239,6 +239,20 @@ void subtract_matrix(matrix *dst, matrix *src)
 	}
 }
 
+void add_matrix(matrix *dst, matrix *src)
+{
+	int m, n, k;
+
+	ASSERT(isSameSize(dst, src), ERR_MISMATCH_SIZE);
+
+	m = get_rows(dst);
+	n = get_cols(src);
+
+	for (k = 0; k < m * n; k++) {
+		dst->array[k] += src->array[k];
+	}
+}
+
 void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R)
 {
 	/* CGS - Classical Gram-Schmidt Algorithm. */
@@ -481,26 +495,58 @@ void householder_vector(vector *x, vector *v, scalar *beta, int k)
 
 void house_matrix_columns(matrix *src, matrix *dst)
 {
-	/* Store the Householder vectors of src by columns */
+	/* Factored-form Householder QR
+	 * Store the Householder vectors of src to the lower triangular dst
+	 * Store the R to the diag and upper triangular. */
 
 	int m, n;
 	int i, j;
+	matrix *tmp;
 	ASSERT(isSameSize(src, dst), ERR_MISMATCH_SIZE);
 
 	m = get_rows(src);
 	n = get_cols(src);
 
-	zero_matrix(dst);
+	copy_matrix(src, dst);
+	tmp = create_matrix(m, n);
+
 	for (j = 0; j < n; j++) {
 		vector *vj = create_col_vector(m - j);
 		vector *vh = create_col_vector(m - j);
+		matrix *Qj = create_matrix(m - j, n - j);
+		matrix *Qp = create_matrix(m - j, n - j);
+		matrix *Pj = create_matrix(m - j, m - j);
 		scalar beta;
 
-		get_block(src, j, j, vj);
+		get_block(dst, j, j, vj);
+		get_block(dst, j, j, Qj);
+
 		householder_vector(vj, vh, &beta, 0);
-		set_block(dst, j, j, vh);
+		set_block(tmp, j, j, vj);
+		out_product(Pj, vh, vh);
+		scalar_matrix_mul(Pj, -beta, Pj);
+		for (i = 0; i < m - j; i++) {
+			set_element( Pj, i, i, get_element(Pj, i, i) + 1 );
+		}
+
+		matrix_mul(Qp, Pj, Qj);
+
+		set_block(dst, j, j, Qp);
+		printf("Qp\n");
+		print_matrix(Qp);
 
 		destroy_vector(vj);
 		destroy_vector(vh);
+		destroy_matrix(Qj);
+		destroy_matrix(Qp);
+		destroy_matrix(Pj);
 	}
+
+	for (i = 0; i < n; i++) {
+		set_element(tmp, i, i, 0);
+	}
+
+	add_matrix(dst, tmp);
+
+	destroy_matrix(tmp);
 }
