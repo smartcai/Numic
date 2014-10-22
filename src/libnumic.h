@@ -67,5 +67,6 @@ void get_col_vector(matrix *mp, int k, vector *vp);
 void set_col_vector(matrix *mp, int k, vector *vp);
 
 void householder_vector(vector *x, vector *v, scalar *beta, int k);
+void house_matrix_columns(matrix *src, matrix *dst);
 
 #endif  /* __NUM_LIBNUMIC_H__ */

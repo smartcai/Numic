@@ -478,3 +478,29 @@ void householder_vector(vector *x, vector *v, scalar *beta, int k)
 		scalar_vector_mul(v, 1.0 / vk, v);
 	}
 }
+
+void house_matrix_columns(matrix *src, matrix *dst)
+{
+	/* Store the Householder vectors of src by columns */
+
+	int m, n;
+	int i, j;
+	ASSERT(isSameSize(src, dst), ERR_MISMATCH_SIZE);
+
+	m = get_rows(src);
+	n = get_cols(src);
+
+	zero_matrix(dst);
+	for (j = 0; j < n; j++) {
+		vector *vj = create_col_vector(m - j);
+		vector *vh = create_col_vector(m - j);
+		scalar beta;
+
+		get_block(src, j, j, vj);
+		householder_vector(vj, vh, &beta, 0);
+		set_block(dst, j, j, vh);
+
+		destroy_vector(vj);
+		destroy_vector(vh);
+	}
+}

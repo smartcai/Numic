@@ -8,6 +8,7 @@ void test_gaxpy(void);
 void test_matrix_mul(void);
 void test_qr_decompose_cgs(void);
 void test_householder_vector(void);
+void test_house_matrix_columns(void);
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
 	test_matrix_mul();
 	test_qr_decompose_cgs();
 	test_householder_vector();
+	test_house_matrix_columns();
 	return 0;
 }
 
@@ -364,4 +366,31 @@ void test_householder_vector(void)
 	destroy_matrix(prod);
 	destroy_matrix(y);
 	printf("**** Test householder_vector end ****\n");
+}
+
+void test_house_matrix_columns(void)
+{
+	printf("**** Test house_matrix_columns ****\n");
+	int m = 5, n = 3;
+	matrix *A, *H;
+	int i, j;
+	A = create_matrix(m, n);
+	H = create_matrix(m, n);
+
+	for (j = 0; j < n; j++) {
+		for (i = 0; i < m; i++) {
+			set_element(A, i, j, i + j);
+		}
+	}
+
+	house_matrix_columns(A, H);
+
+	printf("A\n");
+	print_matrix(A);
+	printf("H\n");
+	print_matrix(H);
+
+	destroy_matrix(A);
+	destroy_matrix(H);
+	printf("**** Test house_matrix_columns end ****\n");
 }
