@@ -371,11 +371,13 @@ void test_householder_vector(void)
 void test_house_matrix_columns(void)
 {
 	printf("**** Test house_matrix_columns ****\n");
-	int m = 5, n = 3;
-	matrix *A, *H;
+	int m = 5, n = 3, k = 3;
+	matrix *A, *H, *Q, *R;
 	int i, j;
 	A = create_matrix(m, n);
 	H = create_matrix(m, n);
+	R = create_matrix(k, n);
+	Q = create_matrix(m, k);
 
 	for (j = 0; j < n; j++) {
 		for (i = 0; i < m; i++) {
@@ -390,7 +392,56 @@ void test_house_matrix_columns(void)
 	printf("H\n");
 	print_matrix(H);
 
+	for (j = 0; j < (k > n ? n : k) ; j++) {
+		for (i = 0; i <= j; i++) {
+			set_element(R, i, j, get_element(H, i, j));
+		}
+	}
+	printf("R\n");
+	print_matrix(R);
+
+	for (i = 0; i < k; i++) {
+		set_element(Q, i, i, 1);
+	}
+
+	for (j = n - 1; j >= 0; j--) {
+		vector *vh = create_col_vector(m - j);
+		vector *vt = create_row_vector(m - j);
+		vector *vn = create_row_vector(k - j);
+		matrix *Qj = create_matrix(m - j, k - j);
+		matrix *Qp = create_matrix(m - j, k - j);
+		scalar beta;
+
+		get_block(H, j, j, vh);
+		set_vector_element(vh, 0, 1);
+		beta = 2 / dot_product(vh, vh);
+		transpose_vector(vh, vt);
+
+		get_block(Q, j, j, Qj);
+		matrix_mul(vn, vt, Qj);
+
+		scalar_vector_mul(vh, beta, vh);
+		out_product(Qp, vh, vn);
+		subtract_matrix(Qj, Qp);
+		set_block(Q, j, j, Qj);
+
+		destroy_vector(vh);
+		destroy_vector(vt);
+		destroy_matrix(Qj);
+		destroy_matrix(vn);
+		destroy_matrix(Qp);
+	}
+
+	printf("Q\n");
+	print_matrix(Q);
+
+	matrix_mul(A, Q, R);
+	printf("A\n");
+	print_matrix(A);
+
 	destroy_matrix(A);
 	destroy_matrix(H);
+	destroy_matrix(Q);
+	destroy_matrix(R);
 	printf("**** Test house_matrix_columns end ****\n");
 }
