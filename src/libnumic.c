@@ -502,6 +502,7 @@ void house_matrix_columns(matrix *src, matrix *dst)
 	int m, n;
 	int i, j;
 	matrix *tmp;
+
 	ASSERT(isSameSize(src, dst), ERR_MISMATCH_SIZE);
 
 	m = get_rows(src);
@@ -513,9 +514,10 @@ void house_matrix_columns(matrix *src, matrix *dst)
 	for (j = 0; j < n; j++) {
 		vector *vj = create_col_vector(m - j);
 		vector *vh = create_col_vector(m - j);
+		vector *vt = create_row_vector(m - j);
 		matrix *Qj = create_matrix(m - j, n - j);
 		matrix *Qp = create_matrix(m - j, n - j);
-		matrix *Pj = create_matrix(m - j, m - j);
+		vector *vn = create_row_vector(n - j);
 		scalar beta;
 
 		get_block(dst, j, j, vj);
@@ -523,23 +525,22 @@ void house_matrix_columns(matrix *src, matrix *dst)
 
 		householder_vector(vj, vh, &beta, 0);
 		set_block(tmp, j, j, vj);
-		out_product(Pj, vh, vh);
-		scalar_matrix_mul(Pj, -beta, Pj);
-		for (i = 0; i < m - j; i++) {
-			set_element( Pj, i, i, get_element(Pj, i, i) + 1 );
-		}
 
-		matrix_mul(Qp, Pj, Qj);
+		transpose_vector(vh, vt);
+		matrix_mul(vn, vt, Qj);
+		scalar_vector_mul(vh, beta, vh);
 
-		set_block(dst, j, j, Qp);
-		printf("Qp\n");
-		print_matrix(Qp);
+		out_product(Qp, vh, vn);
+		subtract_matrix(Qj, Qp);
+
+		set_block(dst, j, j, Qj);
 
 		destroy_vector(vj);
 		destroy_vector(vh);
 		destroy_matrix(Qj);
+		destroy_vector(vn);
+		destroy_vector(vt);
 		destroy_matrix(Qp);
-		destroy_matrix(Pj);
 	}
 
 	for (i = 0; i < n; i++) {
