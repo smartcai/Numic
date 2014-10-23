@@ -303,6 +303,73 @@ void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R)
 	destroy_matrix(Qk);
 }
 
+void qr_decompose_hh(matrix *A, matrix *Q, matrix *R)
+{
+	/* HH - Householder method. */
+	int m, n, k;
+
+	matrix *H;
+	int i, j;
+
+	ASSERT((A->rows == Q->rows), ERR_MISMATCH_SIZE);
+	ASSERT((A->cols == R->cols), ERR_MISMATCH_SIZE);
+	ASSERT((Q->cols == R->rows), ERR_MISMATCH_SIZE);
+	ASSERT((Q->cols <= Q->rows), ERR_MISMATCH_SIZE);
+	ASSERT((R->cols <= R->rows), ERR_MISMATCH_SIZE);
+
+	m = get_rows(A);
+	n = get_cols(A);
+	k = get_cols(Q);
+
+	H = create_matrix(m, n);
+	house_matrix_columns(A, H);
+
+	zero_matrix(R);
+	for (j = 0; j < n; j++) {
+		for (i = 0; i <= j; i++) {
+			set_element(R, i, j, get_element(H, i, j));
+		}
+	}
+
+	zero_matrix(Q);
+	for (i = 0; i < k; i++) {
+		set_element(Q, i, i, 1);
+	}
+
+	for (j = n - 1; j >=0; j--) {
+		vector *vh = create_col_vector(m - j);
+		vector *vt = create_row_vector(m - j);
+		vector *vn = create_row_vector(k - j);
+		matrix *Qj = create_matrix(m - j, k - j);
+		matrix *Qp = create_matrix(m - j, k - j);
+		scalar beta;
+
+		get_block(H, j, j, vh);
+		set_vector_element(vh, 0, 1);
+		get_block(Q, j, j, Qj);
+
+		beta = 2 / dot_product(vh, vh);
+		transpose(vh, vt);
+
+		matrix_mul(vn, vt, Qj);
+
+		scalar_vector_mul(vh, beta, vh);
+
+		out_product(Qp, vh, vn);
+		subtract_matrix(Qj, Qp);
+
+		set_block(Q, j, j, Qj);
+
+		destroy_vector(vh);
+		destroy_vector(vt);
+		destroy_vector(vn);
+		destroy_matrix(Qj);
+		destroy_matrix(Qp);
+	}
+
+	destroy_matrix(H);
+}
+
 inline vector *create_col_vector(int dim)
 {
 	return create_matrix(dim, 1);

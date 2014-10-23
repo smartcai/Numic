@@ -39,6 +39,7 @@ void subtract_matrix(matrix *dst, matrix *src);
 void add_matrix(matrix *dst, matrix *src);
 
 void qr_decompose_cgs(matrix *A, matrix *Q, matrix *R);
+void qr_decompose_hh(matrix *A, matrix *Q, matrix *R);
 
 /**
  * Map the matrix methods to vector.
