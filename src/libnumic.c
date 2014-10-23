@@ -496,8 +496,8 @@ void householder_vector(vector *x, vector *v, scalar *beta, int k)
 void house_matrix_columns(matrix *src, matrix *dst)
 {
 	/* Factored-form Householder QR
-	 * Store the Householder vectors of src to the lower triangular dst
-	 * Store the R to the diag and upper triangular. */
+	 * Store the R to the diag and upper triangular.
+	 * Store the Householder vectors of src to the lower triangular dst */
 
 	int m, n;
 	int i, j;
@@ -524,7 +524,7 @@ void house_matrix_columns(matrix *src, matrix *dst)
 		get_block(dst, j, j, Qj);
 
 		householder_vector(vj, vh, &beta, 0);
-		set_block(tmp, j, j, vj);
+		set_block(tmp, j, j, vh);
 
 		transpose_vector(vh, vt);
 		matrix_mul(vn, vt, Qj);
