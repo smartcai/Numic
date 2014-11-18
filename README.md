@@ -19,3 +19,9 @@ package, so that any project in the C language can incorporate it as part.
 -----
 
 The document.
+
+Major Reference
+---------------
+
+Matrix Computations by Gene H. Golub, Charles F. Van Loan
+Numerical Linear Algebra by Lloyd N. Trefethen, David Bau III
