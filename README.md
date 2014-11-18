@@ -24,4 +24,5 @@ Major Reference
 ---------------
 
 Matrix Computations by Gene H. Golub, Charles F. Van Loan
+
 Numerical Linear Algebra by Lloyd N. Trefethen, David Bau III
