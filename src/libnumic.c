@@ -7,14 +7,14 @@
 
 #define FREE_SET_NULL(p) (free(p), p = NULL)
 
-#define ERR_MSG(Str)                                                    \
+#define ERR_MSG(Str)													\
 	printf("ERROR: %s: L%d, %s " Str "\n", __FILE__, __LINE__, __FUNCTION__)
 
 #define ASSERT(stmt, S) do {                    \
-		if (!stmt) {                            \
-			ERR_MSG(S);                         \
-			exit(-1);                           \
-		}                                       \
+		if (!stmt) {							\
+			ERR_MSG(S);							\
+			exit(-1);							\
+		}										\
 	} while(0)
 
 #define ERR_OUT_OF_MEMORY     ", out of memory."
@@ -31,7 +31,7 @@ struct matrix {
 	scalar *array;
 };
 
-#define isSameSize(m1, m2)                              \
+#define isSameSize(m1, m2)								\
 	((m1->rows == m2->rows) && (m1->cols == m2->cols))
 
 #define isSameBufSize(m1, m2)                       \
