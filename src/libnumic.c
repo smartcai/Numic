@@ -10,7 +10,7 @@
 #define ERR_MSG(Str)													\
 	printf("ERROR: %s: L%d, %s " Str "\n", __FILE__, __LINE__, __FUNCTION__)
 
-#define ASSERT(stmt, S) do {                    \
+#define ASSERT(stmt, S) do {					\
 		if (!stmt) {							\
 			ERR_MSG(S);							\
 			exit(-1);							\
