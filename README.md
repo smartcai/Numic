@@ -6,6 +6,10 @@ Numic is short for NUmerical Matrix In C.
 The design philosophy is to build up a clean but not huge matrix computations
 package, so that any project in the C language can incorporate it as part.
 
+The major components include operations on matrix and vectors such as BLAS,
+transformations like Householder and Givens, decompositions like QR and SVD and
+bidiagonalization, and some optimizations methods based on them.
+
 ./src
 ---
 
