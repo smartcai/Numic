@@ -9,10 +9,10 @@ package, so that any project in the C language can incorporate it as part.
 ./src
 ---
 
-- libnumic.h - The interface.
-- libnumic.c - The major C code.
+- libmatrix.h - The interface.
+- libmatrix.c - The major C code.
 - example - Some test code.
-- prototype - Experimental ideas in Octave.
+- prototype - Experimental ideas in Octave/Matlab.
 
 
 ./doc
