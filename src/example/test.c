@@ -196,7 +196,7 @@ void test_matrix_bidiagonal_housh(void)
             matrix_set(A, i, j, arr1[k++]);
         }
     }
-    matrix_bidiagonal_housh(A, P, B, Q);
+    matrix_bidiagonal(A, P, B, Q);
     matrix_print(P);
     matrix_print(B);
     matrix_print(Q);
@@ -222,9 +222,9 @@ int main(int argc, char *argv[])
     /* test_types(); */
     /* test_optns(); */
     /* test_vector_housh(); */
-    test_vector_givens();
+    /* test_vector_givens(); */
     /* test_matrix_full_qr_house(); */
-    /* test_matrix_bidiagonal_housh(); */
+    test_matrix_bidiagonal_housh();
 
     return 0;
 }

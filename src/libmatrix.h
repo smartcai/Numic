@@ -84,12 +84,12 @@ void   matrix_eye(Matrix *A);
 /* Linear algebra */
 Scalar vector_L2_norm(Vector *v);
 void   vector_housh(Vector *v, Scalar *beta, Vector *x, int j);
-void   vector_givens(Scalar *c, Scalar *s, Scalar x, Scalar y);
+void   vector_givens(Scalar *c, Scalar *s, Scalar y, Scalar z);
 
 void   matrix_full_qr_housh(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_full_qr_givens(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_full_qr_cgs(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_full_qr_mgs(Matrix *A, Matrix *Q, Matrix *R);
-void   matrix_bidiagonal_housh(Matrix *A, Matrix *P, Matrix *B, Matrix * Q);
+void   matrix_bidiagonal(Matrix *A, Matrix *P, Matrix *B, Matrix * Q);
 
 #endif /* LIBMATRIX_H */

@@ -754,7 +754,7 @@ void vector_housh(Vector *v, Scalar *beta, Vector *x, int j)
     }
 }
 
-void vector_givens(Scalar *c, Scalar *s, Scalar x, Scalar y)
+void vector_givens(Scalar *c, Scalar *s, Scalar y, Scalar z)
 /**
  * Compute a 2x2 matrix G to rotate angle theta such that:
  * G^t * [x; y] = [r; 0],
@@ -771,13 +771,13 @@ void vector_givens(Scalar *c, Scalar *s, Scalar x, Scalar y)
         *s = 0;
     }
     else {
-        if (SCALAR_ABS(y) > SCALAR_ABS(x)) {
-            r = - x / y;
+        if (SCALAR_ABS(z) > SCALAR_ABS(y)) {
+            r = - y / z;
             *s = 1 / sqrt(1 + r * r);
             *c = (*s) * r;
         }
         else {
-            r = - y / x;
+            r = - z / y;
             *c = 1 / sqrt(1 + r * r);
             *s = (*c) * r;
         }
@@ -848,13 +848,13 @@ void matrix_full_qr_mgs(Matrix *A, Matrix *Q, Matrix *R)
     ;
 }
 
-void matrix_bidiagonal_housh(Matrix *A, Matrix *P, Matrix *B, Matrix *Q)
+void matrix_bidiagonal(Matrix *A, Matrix *P, Matrix *B, Matrix *Q)
 /* A = PBQ */
 {
     int m, n, i, j, k, ii, jj;
     Matrix *Hj, *Hi, *Pt, *Bt, *Qt;
     Vector *xj, *vj, *xi, *vi;
-    Scalar beta;
+    Scalar beta, c, s, y, z;
 
     ASSERT(A->row == B->row, ERR_MISMATCHED_SIZE);
     ASSERT(A->col == B->col, ERR_MISMATCHED_SIZE);
