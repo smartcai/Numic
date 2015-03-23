@@ -84,8 +84,7 @@ void   matrix_eye(Matrix *A);
 /* Linear algebra */
 Scalar vector_L2_norm(Vector *v);
 void   vector_housh(Vector *v, Scalar *beta, Vector *x, int j);
-
-void   matrix_givens(Matrix *G, Scalar x, Scalar y);
+void   vector_givens(Scalar *c, Scalar *s, Scalar x, Scalar y);
 
 void   matrix_full_qr_housh(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_full_qr_givens(Matrix *A, Matrix *Q, Matrix *R);

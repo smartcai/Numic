@@ -112,10 +112,11 @@ void test_vector_housh(void)
     matrix_del(I);
 }
 
-void test_matrix_givens(void)
+void test_vector_givens(void)
 {
     Matrix *G;
     Vector *x, *y;
+    Scalar c, s;
 
     x = vector_new(2, COL);
     y = vector_new(2, COL);
@@ -123,7 +124,11 @@ void test_matrix_givens(void)
 
     vector_set(x, 0, 1);
     vector_set(x, 1, 1);
-    matrix_givens(G, 1, 1);
+    vector_givens(&c, &s, 1, 1);
+    matrix_set(G, 0, 0, c);
+    matrix_set(G, 0, 1, -s);
+    matrix_set(G, 1, 0, s);
+    matrix_set(G, 1, 1, c);
     blas_gaxpy(y, G, x);
     matrix_print(G);
     vector_print(y);
@@ -217,9 +222,9 @@ int main(int argc, char *argv[])
     /* test_types(); */
     /* test_optns(); */
     /* test_vector_housh(); */
-    /* test_matrix_givens(); */
+    test_vector_givens();
     /* test_matrix_full_qr_house(); */
-    test_matrix_bidiagonal_housh();
+    /* test_matrix_bidiagonal_housh(); */
 
     return 0;
 }

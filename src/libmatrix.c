@@ -754,40 +754,34 @@ void vector_housh(Vector *v, Scalar *beta, Vector *x, int j)
     }
 }
 
-void matrix_givens(Matrix *G, Scalar x, Scalar y)
+void vector_givens(Scalar *c, Scalar *s, Scalar x, Scalar y)
 /**
- * Compute a 2x2 orthogonal matrix G such that:
- * G * [x; y] = [r; 0],
+ * Compute a 2x2 matrix G to rotate angle theta such that:
+ * G^t * [x; y] = [r; 0],
  * where G = [c s; -s c]
+ *       c = cos(theta)
+ *       s = sin(theta)
  * G * G^t = I
  */
 {
-    Scalar c, s, r;
-
-    ASSERT(G->col == 2, ERR_MISMATCHED_SIZE);
-    ASSERT(G->row == 2, ERR_MISMATCHED_SIZE);
+    Scalar r;
 
     if (SCALAR_EQLZERO(y)) {
-        c = 1;
-        s = 0;
+        *c = 1;
+        *s = 0;
     }
     else {
         if (SCALAR_ABS(y) > SCALAR_ABS(x)) {
             r = - x / y;
-            s = 1 / sqrt(1 + r * r);
-            c = s * r;
+            *s = 1 / sqrt(1 + r * r);
+            *c = (*s) * r;
         }
         else {
             r = - y / x;
-            c = 1 / sqrt(1 + r * r);
-            s = c * r;
+            *c = 1 / sqrt(1 + r * r);
+            *s = (*c) * r;
         }
     }
-
-    matrix_set(G, 0, 0,  c);
-    matrix_set(G, 1, 0,  s);
-    matrix_set(G, 0, 1, -s);
-    matrix_set(G, 1, 1,  c);
 }
 
 void matrix_full_qr_housh(Matrix *A, Matrix *Q, Matrix *R)
