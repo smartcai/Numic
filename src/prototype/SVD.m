@@ -1,11 +1,14 @@
 clear; close all; clc;
 
-function [B1, G] = oneiter(B, k)
-  [c, s] = givens(B(k, k), B(k, k+1));
+function [B1, G] = oneiter_right(B, k)
   B1 = B;
+  [c, s] = givens(B1(k, k), B1(k, k+1));
   G = [c s; -s c];
   B1(:, k:k+1) = B1(:, k:k+1) * G'
+end
 
+function [B1, G] = oneiter_left(B, k)
+  B1 = B;
   [c, s] = givens(B1(k, k), B1(k+1, k));
   G = [c s; -s c];
   B1(k:k+1, :) = G * B1(k:k+1, :)
@@ -24,11 +27,13 @@ B1 = [
 ];
 
 Bout = B0;
-Bout = [B0 ; [0 0 0 0 0]];
-n = 4;
-m = 20;
+
+n = 3;
+m = 4;
 for i = 1:m
-  for k = 1:n-1
-    [Bout, G] = oneiter(Bout, k);
+  for k = 1:2
+    [Bout, G] = oneiter_right(Bout, k);
+    [Bout, G] = oneiter_left(Bout, k);
   end
+  [Bout, G] = oneiter_right(Bout, 3);
 end
