@@ -36,6 +36,8 @@ int     matrix_row(Matrix *m);
 int     matrix_col(Matrix *m);
 void    matrix_print(Matrix *m);
 void    matrix_cpy(Matrix *dst, Matrix *src);
+void    matrix_save(Matrix *m, char *fn);
+void    matrix_load(Matrix *m, char *fn);
 
 
 /* Core operations */

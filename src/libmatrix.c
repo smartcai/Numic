@@ -173,6 +173,48 @@ void matrix_cpy(Matrix *dst, Matrix *src)
     memcpy(dst->arr, src->arr, m * n * sizeof(Scalar));
 }
 
+void matrix_save(Matrix *m, char *fn)
+{
+    FILE *f;
+    int i, j;
+
+    if ((f = fopen(fn, "w")) == NULL) {
+        printf("Cannot open file. %s, %d\n", fn, __LINE__);
+        exit(-1);
+    }
+
+    for (i = 0; i < m->row; i++) {
+        for (j = 0; j < m->col; j++) {
+            Scalar val = matrix_get(m, i, j);
+            fprintf(f, "%.15lf,  ", val);
+        }
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+}
+
+void matrix_load(Matrix *m, char *fn)
+{
+    FILE *f;
+    int i, j;
+
+    if ((f = fopen(fn, "r")) == NULL) {
+        printf("Cannot open file. %s, %d\n", fn, __LINE__);
+        exit(-1);
+    }
+
+    for (i = 0; i < m->row; i++) {
+        for (j = 0; j < m->col; j++) {
+            Scalar val;
+            fscanf(f, "%lf,", &val);
+            matrix_set(m, i, j, val);
+        }
+    }
+
+    fclose(f);
+}
+
 
 void blas_saxpy(Vector *y, Scalar  a, Vector *x)
 /* y = y + ax: Scalar A X Plus Y */
