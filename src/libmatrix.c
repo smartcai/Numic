@@ -22,8 +22,8 @@ do {                                            \
 /* Machine EPSILON -- IEEE754 */
 #define SCALAR_EPSILON    (pow(2.0, -52))
 #define SCALAR_ABS(x)     (x < 0 ? -x : x)
-#define SCALAR_EQLZERO(x) (SCALAR_ABS(x) <= SCALAR_EPSILON)
-#define SCALAR_NOTZERO(x) (SCALAR_ABS(x) >  SCALAR_EPSILON)
+#define SCALAR_EQLZERO(x) ((SCALAR_ABS(x)) <= (SCALAR_EPSILON))
+#define SCALAR_NOTZERO(x) ((SCALAR_ABS(x)) >  (SCALAR_EPSILON))
 #define SCALAR_MIN(a, b)  (a > b ? b : a)
 #define SCALAR_MAX(a, b)  (a < b ? b : a)
 
@@ -757,7 +757,7 @@ void vector_housh(Vector *v, Scalar *beta, Vector *x, int j)
 void vector_givens(Scalar *c, Scalar *s, Scalar y, Scalar z)
 /**
  * Compute a 2x2 matrix G to rotate angle theta such that:
- * G^t * [x; y] = [r; 0],
+ * G^t * [y; z] = [r; 0],
  * where G = [c s; -s c]
  *       c = cos(theta)
  *       s = sin(theta)
@@ -772,12 +772,12 @@ void vector_givens(Scalar *c, Scalar *s, Scalar y, Scalar z)
     }
     else {
         if (SCALAR_ABS(z) > SCALAR_ABS(y)) {
-            r = - y / z;
+            r = -y / z;
             *s = 1 / sqrt(1 + r * r);
             *c = (*s) * r;
         }
         else {
-            r = - z / y;
+            r = -z / y;
             *c = 1 / sqrt(1 + r * r);
             *s = (*c) * r;
         }
@@ -925,4 +925,130 @@ void matrix_bidiagonal(Matrix *A, Matrix *P, Matrix *B, Matrix *Q)
     vector_del(vj);
     vector_del(xi);
     vector_del(vi);
+}
+
+void matrix_svd(Matrix *A, Matrix *U, Matrix *S, Matrix *V)
+/* A = U * S * V^t */
+{
+    int m, n, i, j, k, r, iter, flag, f1, f2;
+    Scalar c, s, y, z, y1, z1, sigma;
+    Matrix *Vt;
+
+    ASSERT(A->row == S->row, ERR_MISMATCHED_SIZE);
+    ASSERT(A->col == S->col, ERR_MISMATCHED_SIZE);
+    ASSERT(U->row == U->col, ERR_MISMATCHED_SIZE);
+    ASSERT(V->row == V->col, ERR_MISMATCHED_SIZE);
+    ASSERT(S->row == U->col, ERR_MISMATCHED_SIZE);
+    ASSERT(S->col == V->row, ERR_MISMATCHED_SIZE);
+
+    matrix_bidiagonal(A, U, S, V);
+
+    m = A->row; n = A->col;
+    r = m < n ? m : n;
+    Vt = matrix_new(n, n);
+    flag = 1;
+    while (flag) {
+        flag = 0;
+        for (k = 0; k < r - 1; k++) {
+            /* Right multiplication */
+            y = matrix_get(S, k, k);
+            z = matrix_get(S, k, k + 1);
+            if (SCALAR_EQLZERO(z)) {
+                f1 = 0;
+                flag = flag || f1;
+            }
+            else {
+                f1 = 1;
+                flag = flag || f1;
+            }
+            vector_givens(&c, &s, y, z);
+            for (i = 0; i < m; i++) {
+                y = matrix_get(S, i, k);
+                z = matrix_get(S, i, k + 1);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(S, i, k, y1);
+                matrix_set(S, i, k + 1, z1);
+            }
+            for (j = 0; j < n; j++) {
+                y = matrix_get(V, k, j);
+                z = matrix_get(V, k + 1, j);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(V, k, j, y1);
+                matrix_set(V, k + 1, j, z1);
+            }
+
+            /* Left multiplication */
+            y = matrix_get(S, k, k);
+            z = matrix_get(S, k + 1, k);
+            if (SCALAR_EQLZERO(z)) {
+                f1 = 0;
+                flag = flag || f1;
+            }
+            else {
+                f1 = 1;
+                flag = flag || f1;
+            }
+            vector_givens(&c, &s, y, z);
+            for (j = 0; j < n; j++) {
+                y = matrix_get(S, k, j);
+                z = matrix_get(S, k + 1, j);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(S, k, j, y1);
+                matrix_set(S, k + 1, j, z1);
+            }
+            for (i = 0; i < m; i++) {
+                y = matrix_get(U, i, k);
+                z = matrix_get(U, i, k + 1);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(U, i, k, y1);
+                matrix_set(U, i, k + 1, z1);
+            }
+        }
+
+        /* Remove the tail element */
+        if ((n > m) && (iter == 0)) {
+            /* Right multiplication */
+            y = matrix_get(S, r - 1, r - 1);
+            z = matrix_get(S, r - 1, r);
+            vector_givens(&c, &s, y, z);
+            for (i = 0; i < m; i++) {
+                y = matrix_get(S, i, r - 1);
+                z = matrix_get(S, i, r);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(S, i, r - 1, y1);
+                matrix_set(S, i, r, z1);
+            }
+            for (j = 0; j < n; j++) {
+                y = matrix_get(V, k, j);
+                z = matrix_get(V, k + 1, j);
+                y1 = c * y - s * z;
+                z1 = s * y + c * z;
+                matrix_set(V, k, j, y1);
+                matrix_set(V, k + 1, j, z1);
+            }
+        }
+    }
+
+    /* Change signs of eigenvalues */
+    for (k = 0; k < r; k++) {
+        sigma = matrix_get(S, k, k);
+        if (sigma < 0) {
+            matrix_set(S, k, k, -sigma);
+            Scalar val;
+            for (i = 0; i < m; i++) {
+                val = matrix_get(U, i, k);
+                matrix_set(U, i, k, -val);
+            }
+        }
+    }
+
+    matrix_transpose(Vt, V);
+    matrix_cpy(V, Vt);
+
+    matrix_del(Vt);
 }

@@ -214,6 +214,56 @@ void test_matrix_bidiagonal_housh(void)
     matrix_del(Bt);
 }
 
+void test_matrix_svd(void)
+{
+    Matrix *A, *U, *S, *V, *Ut, *Vt, *Iu, *Iv;
+    int i, j, k;
+
+    A  = matrix_new(3, 5);
+    S  = matrix_new(3, 5);
+    U  = matrix_new(3, 3);
+    Ut = matrix_new(3, 3);
+    Iu = matrix_new(3, 3);
+    V  = matrix_new(5, 5);
+    Vt = matrix_new(5, 5);
+    Iv = matrix_new(5, 5);
+
+    k = 0;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 5; j++) {
+            matrix_set(A, i, j, arr1[k++]);
+        }
+    }
+    matrix_svd(A, U, S, V);
+    matrix_transpose(Ut, U);
+    matrix_transpose(Vt, V);
+    matrix_print(A);
+    matrix_print(U);
+    matrix_print(S);
+    matrix_print(V);
+
+    /* Test A = U * S * V^t */
+    matrix_mul(A, U, S);
+    matrix_cpy(S, A);
+    matrix_mul(A, S, Vt);
+    matrix_print(A);
+
+    /* Test orthogonal matrix */
+    matrix_mul(Iu, Ut, U);
+    matrix_mul(Iv, Vt, V);
+    matrix_print(Iu);
+    matrix_print(Iv);
+
+    matrix_del(A);
+    matrix_del(S);
+    matrix_del(U);
+    matrix_del(Ut);
+    matrix_del(Iu);
+    matrix_del(V);
+    matrix_del(Vt);
+    matrix_del(Iv);
+}
+
 int main(int argc, char *argv[])
 {
     printf("Hello libmatrix!\n");
@@ -224,7 +274,8 @@ int main(int argc, char *argv[])
     /* test_vector_housh(); */
     /* test_vector_givens(); */
     /* test_matrix_full_qr_house(); */
-    test_matrix_bidiagonal_housh();
+    /* test_matrix_bidiagonal_housh(); */
+    test_matrix_svd();
 
     return 0;
 }
