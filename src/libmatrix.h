@@ -91,7 +91,7 @@ void   vector_givens(Scalar *c, Scalar *s, Scalar y, Scalar z);
 void   matrix_full_qr_housh(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_full_qr_givens(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_thin_qr_cgs(Matrix *A, Matrix *Q, Matrix *R);
-void   matrix_full_qr_mgs(Matrix *A, Matrix *Q, Matrix *R);
+void   matrix_thin_qr_mgs(Matrix *A, Matrix *Q, Matrix *R);
 void   matrix_bidiagonal(Matrix *A, Matrix *P, Matrix *B, Matrix * Q);
 void   matrix_svd(Matrix *A, Matrix *U, Matrix *S, Matrix *V);
 

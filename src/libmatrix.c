@@ -935,9 +935,48 @@ void matrix_thin_qr_cgs(Matrix *A, Matrix *Q, Matrix *R)
     vector_del(Vj);
 }
 
-void matrix_full_qr_mgs(Matrix *A, Matrix *Q, Matrix *R)
+void matrix_thin_qr_mgs(Matrix *A, Matrix *Q, Matrix *R)
 {
-    ;
+    int m, n, i, j, k;
+    Matrix *V;
+    Vector *Aj, *Qj, *Vj;
+    Scalar r;
+
+    ASSERT(A->row == Q->row, ERR_MISMATCHED_SIZE);
+    ASSERT(A->col == Q->col, ERR_MISMATCHED_SIZE);
+    ASSERT(Q->col == R->row, ERR_MISMATCHED_SIZE);
+    ASSERT(R->row == R->col, ERR_MISMATCHED_SIZE);
+
+    m = A->row; n = A->col;
+    V = matrix_new(m, n);
+    Qj = vector_new(m, COL);
+    Aj = vector_new(m, COL);
+    Vj = vector_new(m, COL);
+    matrix_zero(Q);
+    matrix_zero(R);
+    matrix_cpy(V, A);
+    for (j = 0; j < n; j++) {
+        matrix_get_col_vector(Vj, V, j);
+        r = vector_L2_norm(Vj);
+        matrix_set(R, j, j, r);
+        if (SCALAR_NOTZERO(r)) {
+            vector_scalar_mul(Qj, 1/r, Vj);
+            matrix_set_col_vector(Q, j, Qj);
+        }
+
+        for (i = j + 1; i < n; i++) {
+            matrix_get_col_vector(Vj, V, i);
+            r = vector_dot(Qj, Vj);
+            matrix_set(R, j, i, r);
+            blas_saxpy(Vj, -r, Qj);
+            matrix_set_col_vector(V, i, Vj);
+        }
+    }
+
+    matrix_del(V);
+    vector_del(Qj);
+    vector_del(Aj);
+    vector_del(Vj);
 }
 
 void matrix_bidiagonal(Matrix *A, Matrix *P, Matrix *B, Matrix *Q)

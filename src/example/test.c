@@ -216,6 +216,43 @@ void test_matrix_thin_qr_cgs(void)
     matrix_del(R);
 }
 
+void test_matrix_thin_qr_mgs(void)
+{
+    Matrix *A, *Q, *R, *Qt, *I;
+    int i, j, k;
+
+    A  = matrix_new(5, 3);
+    Q  = matrix_new(5, 3);
+    Qt = matrix_new(3, 5);
+    I  = matrix_new(3, 3);
+    R  = matrix_new(3, 3);
+
+    k = 0;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 3; j++) {
+            if (j != 1)
+                matrix_set(A, i, j, arr1[k++]);
+            else
+                matrix_set(A, i, j, 0);
+        }
+    }
+    matrix_thin_qr_mgs(A, Q, R);
+    matrix_print(A);
+    matrix_print(Q);
+    matrix_print(R);
+    matrix_mul(A, Q, R);
+    matrix_print(A);
+    matrix_transpose(Qt, Q);
+    matrix_mul(I, Qt, Q);
+    matrix_print(I);
+
+    matrix_del(A);
+    matrix_del(Q);
+    matrix_del(Qt);
+    matrix_del(I);
+    matrix_del(R);
+}
+
 void test_matrix_bidiagonal_housh(void)
 {
     Matrix *A, *P, *B, *Q, *Bt;
@@ -311,7 +348,8 @@ int main(int argc, char *argv[])
     /* test_vector_housh(); */
     /* test_vector_givens(); */
     /* test_matrix_full_qr_house(); */
-    test_matrix_thin_qr_cgs();
+    /* test_matrix_thin_qr_cgs(); */
+    test_matrix_thin_qr_mgs();
     /* test_matrix_bidiagonal_housh(); */
     /* test_matrix_svd(); */
 
